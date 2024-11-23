@@ -4,17 +4,16 @@ package mobile.controller;
 import lombok.RequiredArgsConstructor;
 import mobile.Handler.HttpMessageNotReadableException;
 import mobile.Handler.RecordNotFoundException;
-import mobile.Service.NovelService;
+import mobile.Service.ComicService;
 import mobile.Service.SavedService;
 import mobile.Service.UserService;
 import mobile.mapping.SavedMapping;
-import mobile.model.Entity.Novel;
+import mobile.model.Entity.Comic;
 import mobile.model.Entity.Saved;
 import mobile.model.Entity.User;
 import mobile.model.payload.request.saved.SavedRequest;
 import mobile.model.payload.response.SavedResponse;
 import mobile.model.payload.response.SuccessResponse;
-import mobile.security.DTO.AppUserDetail;
 import mobile.security.JWT.JwtUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 
@@ -40,7 +38,7 @@ public class SavedResource {
     private static final Logger LOGGER = LogManager.getLogger(NovelResource.class);
 
     private final UserService userService;
-    private final NovelService novelService;
+    private final ComicService comicService;
     private final SavedService savedService;
     @Autowired
     AuthenticationManager authenticationManager;
@@ -67,12 +65,12 @@ public class SavedResource {
                 throw new HttpMessageNotReadableException("user is not existed");
             }
 
-            Novel novel = novelService.findByUrl(savedRequest.getUrl());
-            if(novel == null){
+            Comic comic = comicService.findByUrl(savedRequest.getUrl());
+            if(comic == null){
                 throw new RecordNotFoundException("Novel is not existed");
             }
 
-            Saved saved = new Saved(user,novel);
+            Saved saved = new Saved(user, comic);
             savedService.createSaved(saved);
 
             SuccessResponse response = new SuccessResponse();
@@ -139,15 +137,15 @@ public class SavedResource {
             if(user == null){
                 throw new HttpMessageNotReadableException("user is not existed");
             }
-            Novel novel = novelService.findByUrl(url);
-            if(novel == null){
+            Comic comic = comicService.findByUrl(url);
+            if(comic == null){
                 throw new HttpMessageNotReadableException("Novel is not existed");
             }
             SuccessResponse response = new SuccessResponse();
             response.setStatus(HttpStatus.OK.value());
             response.setSuccess(true);
 
-            Saved saved = savedService.getSaved(user.getId(),novel.getId());
+            Saved saved = savedService.getSaved(user.getId(), comic.getId());
             if(saved == null){
                 response.getData().put("saved",false);
             }
@@ -179,12 +177,12 @@ public class SavedResource {
                 throw new HttpMessageNotReadableException("user is not existed");
             }
 
-            Novel novel = novelService.findByUrl(savedRequest.getUrl());
-            if(novel == null){
+            Comic comic = comicService.findByUrl(savedRequest.getUrl());
+            if(comic == null){
                 throw new RecordNotFoundException("Novel is not existed");
             }
 
-            Saved deleteSaved = savedService.deleteSaved(user.getId(),novel.getId());
+            Saved deleteSaved = savedService.deleteSaved(user.getId(), comic.getId());
             if(deleteSaved == null){
                 throw new RecordNotFoundException("Saved is not existed");
             }

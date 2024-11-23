@@ -1,13 +1,11 @@
 package mobile.controller;
 
-import mobile.Handler.HttpMessageNotReadableException;
 import mobile.Service.ChapterService;
 import mobile.Service.CommentService;
-import mobile.Service.NovelService;
+import mobile.Service.ComicService;
 import mobile.Service.ReadingService;
 import mobile.Service.UserService;
 import mobile.mapping.ChapterMapping;
-import mobile.mapping.CommentMapping;
 import mobile.mapping.NovelMapping;
 import mobile.mapping.ReadingMapping;
 import mobile.model.Entity.*;
@@ -16,10 +14,8 @@ import mobile.model.payload.request.chapter.DeleteChapterRequest;
 import mobile.model.payload.request.chapter.UpdateChapterRequest;
 import mobile.model.payload.request.novel.CreateNovelRequest;
 import mobile.model.payload.request.novel.UpdateNovelRequest;
-import mobile.model.payload.request.reading.ReadingRequest;
 import mobile.model.payload.response.*;
 import mobile.security.JWT.JwtUtils;
-import mobile.Handler.MethodArgumentNotValidException;
 import mobile.Handler.RecordNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +35,6 @@ import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/novels")
@@ -48,7 +43,7 @@ public class NovelResource {
     private static final Logger LOGGER = LogManager.getLogger(NovelResource.class);
 
     private final UserService userService;
-    private final NovelService novelService;
+    private final ComicService comicService;
     private final ChapterService chapterService;
     private final ReadingService readingService;
     private final CommentService commentService;
@@ -63,41 +58,41 @@ public class NovelResource {
                                                  @RequestParam(defaultValue = "3") int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        List<Novel> novelList = null;
+        List<Comic> comicList = null;
         List<NovelResponse> novelResponseList=new ArrayList<>();
         if (status.equals("None"))
-            novelList = novelService.getNovels(pageable);
+            comicList = comicService.getComics(pageable);
         else
-            novelList = novelService.findAllByStatus(status, pageable);
+            comicList = comicService.findAllByStatus(status, pageable);
 
-        if (novelList == null) {
+        if (comicList == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện");
         }
-        for (Novel novel: novelList
+        for (Comic comic : comicList
         ) {
-            novelResponseList.add(NovelMapping.EntityToNovelResponse(novel));
+            novelResponseList.add(NovelMapping.EntityToNovelResponse(comic));
         }
         return new ResponseEntity<List<NovelResponse>>(novelResponseList, HttpStatus.OK);
     }
 
     @GetMapping("/theloai/{theloai}")
     @ResponseBody
-    public ResponseEntity<List<Novel>> getNovelsByType(@PathVariable String theloai,
+    public ResponseEntity<List<Comic>> getNovelsByType(@PathVariable String theloai,
                                                        @RequestParam(defaultValue = "tentruyen") String sort, @RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        List<Novel> novelList = null;
+        List<Comic> comicList = null;
         //List<NovelResponse> novelResponseList=new ArrayList<>();
-        novelList = novelService.SearchByType(theloai, pageable);
+        comicList = comicService.SearchByType(theloai, pageable);
 
-        if (novelList == null) {
+        if (comicList == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện");
         }
 //        for (Novel novel: novelList
 //             ) {
 //            novelResponseList.add(NovelMapping.EntityToNovelResponse(novel));
 //        }
-        return new ResponseEntity<List<Novel>>(novelList, HttpStatus.OK);
+        return new ResponseEntity<List<Comic>>(comicList, HttpStatus.OK);
     }
 /*
     @GetMapping("/search")
@@ -120,21 +115,21 @@ public class NovelResource {
     }*/
     @GetMapping("/search")
     @ResponseBody
-    public ResponseEntity<List<Novel>> searchNovelByTenTruyenLike(@RequestParam(defaultValue = "") String theloai,
-                                                   @RequestParam(defaultValue = "") String tentruyen, @RequestParam(defaultValue = "tentruyen") String sort,
-                                                   @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size){
+    public ResponseEntity<List<Comic>> searchNovelByTenTruyenLike(@RequestParam(defaultValue = "") String theloai,
+                                                                  @RequestParam(defaultValue = "") String tentruyen, @RequestParam(defaultValue = "tentruyen") String sort,
+                                                                  @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        List<Novel> novelList = null;
+        List<Comic> comicList = null;
         if (theloai.equals("")) {
-            novelList = novelService.SearchByTentruyen(tentruyen, pageable);
+            comicList = comicService.SearchByName(tentruyen, pageable);
         } else {
-            novelList = novelService.findByTentruyenLike(tentruyen);
+            comicList = comicService.findByNameLike(tentruyen);
         }
 
-        if (novelList == null) {
+        if (comicList == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện");
         }
-        return new ResponseEntity<List<Novel>>(novelList, HttpStatus.OK);
+        return new ResponseEntity<List<Comic>>(comicList, HttpStatus.OK);
 
     }
 
@@ -142,9 +137,9 @@ public class NovelResource {
     @ResponseBody
     public ResponseEntity<NovelDetailResponse> getNovelByName(@PathVariable String url) {
 
-        Novel novel = novelService.findByUrl(url);
-        int sochap = chapterService.countByDauTruyen(novel.getId());
-        NovelDetailResponse novelDetailResponse = NovelMapping.EntityToNovelDetailResponse(novel,sochap);
+        Comic comic = comicService.findByUrl(url);
+        int sochap = chapterService.countByDauTruyen(comic.getId());
+        NovelDetailResponse novelDetailResponse = NovelMapping.EntityToNovelDetailResponse(comic,sochap);
         if (novelDetailResponse == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện");
         }
@@ -157,12 +152,12 @@ public class NovelResource {
                                                               @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("chapnumber"));
 
-        Novel novel = novelService.findByUrl(url);
-        if (novel == null) {
+        Comic comic = comicService.findByUrl(url);
+        if (comic == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện: " + url);
         }
 
-        List<Chapter> chapterList = chapterService.findByDauTruyen(novel.getId(), pageable);
+        List<Chapter> chapterList = chapterService.findByDauTruyen(comic.getId(), pageable);
         if (chapterList == null) {
             throw new RecordNotFoundException("Không có chương nào được đăng");
         }
@@ -175,12 +170,12 @@ public class NovelResource {
                                                             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("chapnumber"));
 
-        Novel novel = novelService.findByUrl(url);
-        if (novel == null) {
+        Comic comic = comicService.findByUrl(url);
+        if (comic == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện: " + url);
         }
 
-        List<Object> chapterList = chapterService.getNameAndChapnumber(novel.getId(), pageable);
+        List<Object> chapterList = chapterService.getNameAndChapnumber(comic.getId(), pageable);
         if (chapterList == null) {
             throw new RecordNotFoundException("Không có chương nào được đăng");
         }
@@ -191,12 +186,12 @@ public class NovelResource {
     @ResponseBody
     public ResponseEntity<Map<String, Integer>> getTotalChapter(@PathVariable String url) {
 
-        Novel novel = novelService.findByUrl(url);
-        if (novel == null) {
+        Comic comic = comicService.findByUrl(url);
+        if (comic == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện: " + url);
         }
 
-        int chaptolal = chapterService.countByDauTruyen(novel.getId());
+        int chaptolal = chapterService.countByDauTruyen(comic.getId());
         Map<String, Integer> map = new HashMap<>();
         map.put("total", chaptolal);
 
@@ -206,8 +201,8 @@ public class NovelResource {
     @GetMapping("/novel/{url}/chuong/{chapterNumber}")
     @ResponseBody
     public ResponseEntity<Chapter> getChapter(@PathVariable String url, @PathVariable int chapterNumber, HttpServletRequest request) {
-        Novel novel = novelService.findByUrl(url);
-        Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(novel.getId(), chapterNumber);
+        Comic comic = comicService.findByUrl(url);
+        Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(comic.getId(), chapterNumber);
         if (chapter == null) {
             throw new RecordNotFoundException("Không có chương được yêu cầu");
         }
@@ -220,7 +215,7 @@ public class NovelResource {
                 String username = jwtUtils.getUserNameFromJwtToken(accessToken);
                 User user = userService.findByUsername(username);
 
-                Reading reading = new Reading(user, chapterNumber, novel);
+                Reading reading = new Reading(user, chapterNumber, comic);
                 readingService.upsertReading(reading);
             }
         }
@@ -231,21 +226,21 @@ public class NovelResource {
 
     @GetMapping("/tacgia/{tacgia}")
     @ResponseBody
-    public ResponseEntity<List<Novel>> searchNovelByTacgia(@PathVariable String tacgia,
+    public ResponseEntity<List<Comic>> searchNovelByTacgia(@PathVariable String tacgia,
                                                            @RequestParam(defaultValue = "tentruyen") String sort, @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        List<Novel> novelList = novelService.SearchByTacgia(tacgia, pageable);
+        List<Comic> comicList = comicService.SearchByArtist(tacgia, pageable);
 
-        if (novelList == null) {
+        if (comicList == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện");
         }
-        return new ResponseEntity<List<Novel>>(novelList, HttpStatus.OK);
+        return new ResponseEntity<List<Comic>>(comicList, HttpStatus.OK);
     }
 
     @GetMapping("/created") //lấy danh sách truyện được tạo theo username
     @ResponseBody
-    public ResponseEntity<List<Novel>> getNovelsByUsername(@RequestParam(defaultValue = "None") String status,
+    public ResponseEntity<List<Comic>> getNovelsByUsername(@RequestParam(defaultValue = "None") String status,
                                                            @RequestParam(defaultValue = "tentruyen") String sort,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "20") int size,
@@ -254,11 +249,11 @@ public class NovelResource {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         User user = userService.findByUsername(username);
         System.out.println(user.getId().toHexString());
-        List<Novel> novelList = novelService.SearchByNguoidangtruyen(user.getId(), pageable);
-        if (novelList == null) {
+        List<Comic> comicList = comicService.SearchByUploader(user.getId(), pageable);
+        if (comicList == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện nào được đăng");
         }
-        return new ResponseEntity<List<Novel>>(novelList, HttpStatus.OK);
+        return new ResponseEntity<List<Comic>>(comicList, HttpStatus.OK);
     }
 
     @GetMapping("/readings") //lấy danh sách truyện mà người dùng đã đọc tạo theo username
@@ -313,15 +308,15 @@ public class NovelResource {
 
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
 
-            List<Novel> novelList = novelService.getNovels(pageable);
-            if (novelList == null) {
+            List<Comic> comicList = comicService.getComics(pageable);
+            if (comicList == null) {
                 throw new RecordNotFoundException("Không có tìm thấy truyện");
             }
             List<ReadingResponse> readingResponseList = new ArrayList<>();
-            for (Novel novel : novelList) {
+            for (Comic comic : comicList) {
                 try{
-                    int sochap = chapterService.countByDauTruyen(novel.getId());
-                    readingResponseList.add(ReadingMapping.NovelToResponese(novel, sochap));
+                    int sochap = chapterService.countByDauTruyen(comic.getId());
+                    readingResponseList.add(ReadingMapping.NovelToResponese(comic, sochap));
                 }catch (Exception ex){
 
                 }
@@ -347,9 +342,9 @@ public class NovelResource {
             if (user == null)
                 throw new RecordNotFoundException("Không tìm thấy người dùng");
 
-            Novel newNovel = NovelMapping.CreateRequestToNovel(createNovelRequest);
-            newNovel.setNguoidangtruyen(user);
-            novelService.SaveNovel(newNovel);
+            Comic newComic = NovelMapping.CreateRequestToNovel(createNovelRequest);
+            newComic.setUploader(user);
+            comicService.SaveComic(newComic);
 
 
             SuccessResponse response = new SuccessResponse();
@@ -378,15 +373,15 @@ public class NovelResource {
                 throw new RecordNotFoundException("Không tìm thấy người dùng");
 
             ObjectId truyenId = new ObjectId(updateNovelRequest.getId());
-            Optional<Novel> findNovel = novelService.findById(truyenId);
+            Optional<Comic> findNovel = comicService.findById(truyenId);
             if(!findNovel.isPresent()){
                 throw new RecordNotFoundException("Không tìm thấy truyện");
             }
 
-            Novel oldNovel = findNovel.get();
-            if(oldNovel.getNguoidangtruyen().getUsername().equals(user.getUsername())){
-                NovelMapping.UpdateRequestToNovel(updateNovelRequest,oldNovel);
-                novelService.SaveNovel(oldNovel);
+            Comic oldComic = findNovel.get();
+            if(oldComic.getUploader().getUsername().equals(user.getUsername())){
+                NovelMapping.UpdateRequestToNovel(updateNovelRequest, oldComic);
+                comicService.SaveComic(oldComic);
             }
             else{
                 throw new BadCredentialsException("Không thể chỉnh sửa truyện của người khác");
@@ -417,16 +412,16 @@ public class NovelResource {
             if (user == null)
                 throw new RecordNotFoundException("Không tìm thấy người dùng");
 
-            Novel findNovel = novelService.findByUrl(url);
-            if(findNovel == null ){
+            Comic findComic = comicService.findByUrl(url);
+            if(findComic == null ){
                 throw new RecordNotFoundException("Không tìm thấy truyện");
             }
 
-            if(findNovel.getNguoidangtruyen().getUsername().equals(user.getUsername())){
-                commentService.DeleteCommentByNovelUrl(findNovel.getUrl());
-                readingService.deleteAllReadingByNovel(findNovel);
-                chapterService.DeleteAllChapterByNovel(findNovel);
-                novelService.DeleteNovel(findNovel);
+            if(findComic.getUploader().getUsername().equals(user.getUsername())){
+                commentService.DeleteCommentByNovelUrl(findComic.getUrl());
+                readingService.deleteAllReadingByNovel(findComic);
+                chapterService.DeleteAllChapterByNovel(findComic);
+                comicService.DeleteComic(findComic);
             }
             else{
                 throw new BadCredentialsException("Không thể chỉnh sửa truyện của người khác");
@@ -474,16 +469,16 @@ public class NovelResource {
             if(createChapterRequest.getContent().length()<10){
                 throw new BadCredentialsException("Nội dung phải dài hơn 10 ký tự");
             }
-            Novel novel = novelService.findByUrl(createChapterRequest.getUrl());
-            if(novel == null){
+            Comic comic = comicService.findByUrl(createChapterRequest.getUrl());
+            if(comic == null){
                 throw new RecordNotFoundException("Không tìm thấy truyện");
             }
 
-            if(novel.getNguoidangtruyen().getUsername().equals(user.getUsername())){
-                int chapnumber = chapterService.countByDauTruyen(novel.getId()) + 1;
+            if(comic.getUploader().getUsername().equals(user.getUsername())){
+                int chapnumber = chapterService.countByDauTruyen(comic.getId()) + 1;
                 String tenchap = "Chương "+chapnumber+": " +createChapterRequest.getTenchap();
                 Chapter newChapter = new Chapter();
-                newChapter.setDautruyenId(novel);
+                newChapter.setDautruyenId(comic);
                 newChapter.setContent(createChapterRequest.getContent());
                 newChapter.setChapnumber(chapnumber);
                 newChapter.setTenchap(tenchap);
@@ -521,15 +516,15 @@ public class NovelResource {
             if(updateChapterRequest.getContent().length()<10){
                 throw new BadCredentialsException("Nội dung phải dài hơn 10 ký tự");
             }
-            Novel novel = novelService.findByUrl(updateChapterRequest.getUrl());
-            if(novel == null){
+            Comic comic = comicService.findByUrl(updateChapterRequest.getUrl());
+            if(comic == null){
                 throw new RecordNotFoundException("Không tìm thấy truyện");
             }
-            Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(novel.getId(), updateChapterRequest.getChapnumber());
+            Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(comic.getId(), updateChapterRequest.getChapnumber());
             if(chapter == null){
                 throw new RecordNotFoundException("Không tìm thấy chương cần chỉnh sửa");
             }
-            if(novel.getNguoidangtruyen().getUsername().equals(user.getUsername())){
+            if(comic.getUploader().getUsername().equals(user.getUsername())){
                 String tenchap = updateChapterRequest.getTenchap();
                 chapter.setTenchap(tenchap);
                 chapter.setContent(updateChapterRequest.getContent());
@@ -565,16 +560,16 @@ public class NovelResource {
             if (user == null)
                 throw new RecordNotFoundException("Không tìm thấy người dùng");
 
-            Novel novel = novelService.findByUrl(deleteChapterRequest.getUrl());
-            if(novel == null){
+            Comic comic = comicService.findByUrl(deleteChapterRequest.getUrl());
+            if(comic == null){
                 throw new RecordNotFoundException("Không tìm thấy truyện");
             }
-            Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(novel.getId(), deleteChapterRequest.getChapnumber());
+            Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(comic.getId(), deleteChapterRequest.getChapnumber());
             if(chapter == null){
                 throw new RecordNotFoundException("Không tìm thấy chương cần chỉnh sửa");
             }
 
-            if(novel.getNguoidangtruyen().getUsername().equals(user.getUsername())){
+            if(comic.getUploader().getUsername().equals(user.getUsername())){
                 chapterService.DeleteChapter(chapter);
             }
             else{

@@ -1,61 +1,61 @@
 package mobile.mapping;
 
-import mobile.model.Entity.Novel;
+import mobile.model.Entity.Comic;
 import mobile.model.payload.request.novel.CreateNovelRequest;
 import mobile.model.payload.request.novel.UpdateNovelRequest;
 import mobile.model.payload.response.NovelDetailResponse;
 import mobile.model.payload.response.NovelResponse;
 
 public class NovelMapping {
-    public static Novel CreateRequestToNovel(CreateNovelRequest createNovelRequest){
-        Novel newNovel = new Novel();
-        newNovel.setHinhanh(createNovelRequest.getHinhanh());
-        newNovel.setTentruyen(createNovelRequest.getTentruyen());
-        newNovel.setTacgia(createNovelRequest.getTacgia());
-        newNovel.setTheloai(createNovelRequest.getTheloai());
-        newNovel.setUrl(createNovelRequest.getUrl());
-        newNovel.setDanhgia(0);
-        newNovel.setNoidung(createNovelRequest.getNoidung());
-        return newNovel;
+    public static Comic CreateRequestToNovel(CreateNovelRequest createNovelRequest){
+        Comic newComic = new Comic();
+        newComic.setImage(createNovelRequest.getImage());
+        newComic.setName(createNovelRequest.getName());
+        newComic.setArtist(createNovelRequest.getArtist());
+        newComic.setGenre(createNovelRequest.getGenre());
+        newComic.setUrl(createNovelRequest.getUrl());
+        newComic.setRating(0);
+        newComic.setDescription(createNovelRequest.getDescription());
+        return newComic;
     }
 
-    public static NovelDetailResponse EntityToNovelDetailResponse(Novel novel, int sochap){
+    public static NovelDetailResponse EntityToNovelDetailResponse(Comic comic, int sochap){
         NovelDetailResponse novelDetailResponse = new NovelDetailResponse();
-        novelDetailResponse.setHinhanh(novel.getHinhanh());
-        novelDetailResponse.setTentruyen(novel.getTentruyen());
-        novelDetailResponse.setTacgia(novel.getTacgia());
-        novelDetailResponse.setUrl(novel.getUrl());
-        novelDetailResponse.setDanhgia(novel.getDanhgia());
-        novelDetailResponse.setNoidung(novel.getNoidung());
-        novelDetailResponse.setNguoidangtruyen(novel.getNguoidangtruyen().getTenhienthi());
-        novelDetailResponse.setLuotdoc(novel.getLuotdoc());
-        novelDetailResponse.setSoluongdanhgia(novel.getSoluongdanhgia());
+        novelDetailResponse.setHinhanh(comic.getImage());
+        novelDetailResponse.setTentruyen(comic.getName());
+        novelDetailResponse.setTacgia(comic.getArtist());
+        novelDetailResponse.setUrl(comic.getUrl());
+        novelDetailResponse.setDanhgia(comic.getRating());
+        novelDetailResponse.setNoidung(comic.getDescription());
+        novelDetailResponse.setNguoidangtruyen(comic.getUploader().getTenhienthi());
+        novelDetailResponse.setLuotdoc(comic.getViews());
+        novelDetailResponse.setSoluongdanhgia(comic.getSoluongdanhgia());
         novelDetailResponse.setSochap(sochap);
-        novelDetailResponse.setTheloai(novel.getTheloai());
-        novelDetailResponse.setTrangthai(novel.getTrangthai());
+        novelDetailResponse.setTheloai(comic.getGenre());
+        novelDetailResponse.setTrangthai(comic.getTrangthai());
         return novelDetailResponse;
     }
 
-    public static void UpdateRequestToNovel(UpdateNovelRequest updateNovelRequest, Novel oldNovel){
-        oldNovel.setHinhanh(updateNovelRequest.getHinhanh());
-        oldNovel.setTentruyen(updateNovelRequest.getTentruyen());
-        oldNovel.setTacgia(updateNovelRequest.getTacgia());
-        oldNovel.setUrl(updateNovelRequest.getUrl());
-        oldNovel.setNoidung(updateNovelRequest.getNoidung());
+    public static void UpdateRequestToNovel(UpdateNovelRequest updateNovelRequest, Comic oldComic){
+        oldComic.setImage(updateNovelRequest.getHinhanh());
+        oldComic.setName(updateNovelRequest.getTentruyen());
+        oldComic.setArtist(updateNovelRequest.getTacgia());
+        oldComic.setUrl(updateNovelRequest.getUrl());
+        oldComic.setDescription(updateNovelRequest.getNoidung());
     }
 
-    public static NovelResponse EntityToNovelResponse(Novel novel){
+    public static NovelResponse EntityToNovelResponse(Comic comic){
         NovelResponse novelResponse = new NovelResponse();
-        novelResponse.setHinhanh(novel.getHinhanh());
-        novelResponse.setTentruyen(novel.getTentruyen());
-        novelResponse.setTacgia(novel.getTacgia());
-        novelResponse.setUrl(novel.getUrl());
-        novelResponse.setDanhgia(novel.getDanhgia());
-        novelResponse.setNoidung(novel.getNoidung());
-        novelResponse.setLuotdoc(novel.getLuotdoc());
-        novelResponse.setSoluongdanhgia(novel.getSoluongdanhgia());
-        novelResponse.setTheloai(novel.getTheloai());
-        novelResponse.setTrangthai(novel.getTrangthai());
+        novelResponse.setHinhanh(comic.getImage());
+        novelResponse.setTentruyen(comic.getName());
+        novelResponse.setTacgia(comic.getArtist());
+        novelResponse.setUrl(comic.getUrl());
+        novelResponse.setDanhgia(comic.getRating());
+        novelResponse.setNoidung(comic.getDescription());
+        novelResponse.setLuotdoc(comic.getViews());
+        novelResponse.setSoluongdanhgia(comic.getSoluongdanhgia());
+        novelResponse.setTheloai(comic.getGenre());
+        novelResponse.setTrangthai(comic.getTrangthai());
         return novelResponse;
     }
 }

@@ -2,7 +2,7 @@ package mobile.Service.Impl;
 
 import mobile.Service.ChapterService;
 import mobile.model.Entity.Chapter;
-import mobile.model.Entity.Novel;
+import mobile.model.Entity.Comic;
 import mobile.repository.ChapterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +48,8 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public void DeleteAllChapterByNovel(Novel novel) {
-        chapterRepository.deleteAllByDautruyenId(novel);
+    public void DeleteAllChapterByNovel(Comic comic) {
+        chapterRepository.deleteAllByDautruyenId(comic);
     }
 
     @Override

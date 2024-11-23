@@ -5,17 +5,14 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mobile.Service.ReadingService;
-import mobile.model.Entity.Chapter;
-import mobile.model.Entity.Novel;
+import mobile.model.Entity.Comic;
 import mobile.model.Entity.Reading;
 import mobile.model.Entity.User;
-import mobile.repository.NovelRepository;
 import mobile.repository.ReadingRepository;
 
 
@@ -43,7 +40,7 @@ public class ReadingServiceImpl implements ReadingService{
 	}
 
 	@Override
-	public void deleteAllReadingByNovel(Novel novel) {
-		readingRepository.deleteAllByNovel(novel);
+	public void deleteAllReadingByNovel(Comic comic) {
+		readingRepository.deleteAllByNovel(comic);
 	}
 }

@@ -10,12 +10,12 @@ public class ChapterMapping {
 
     public static ChapterNewUpdateResponse getChapterNewUpdateResponse(Chapter chapter){
         ChapterNewUpdateResponse c =new ChapterNewUpdateResponse();
-        c.setTheloai(chapter.getDautruyenId().getTheloai());
-        c.setTentruyen(chapter.getDautruyenId().getTentruyen());
-        c.setTacgia(chapter.getDautruyenId().getTacgia());
+        c.setTheloai(chapter.getDautruyenId().getGenre());
+        c.setTentruyen(chapter.getDautruyenId().getName());
+        c.setTacgia(chapter.getDautruyenId().getArtist());
         c.setUpdateAt(chapter.getUpdateAt());
         c.setChapnumber(chapter.getChapnumber());
-        c.setNguoidangtruyen(chapter.getDautruyenId().getNguoidangtruyen().getTenhienthi());
+        c.setNguoidangtruyen(chapter.getDautruyenId().getUploader().getTenhienthi());
         c.setTenchap(chapter.getTenchap());
         c.setUrl(chapter.getDautruyenId().getUrl());
         return c;

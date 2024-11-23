@@ -14,24 +14,24 @@ public class Saved {
     @DBRef
     protected User user;
     @DBRef
-    protected Novel novel;
+    protected Comic comic;
     public ObjectId getId() {return _id;}
     public void setId(ObjectId _id) {this._id = _id;}
     public User getUser() {return user;}
     public void setUser(User user) {this.user = user;}
-    public Novel getNovel() {return novel;}
-    public void setNovel(Novel novel) {this.novel = novel;}
+    public Comic getNovel() {return comic;}
+    public void setNovel(Comic comic) {this.comic = comic;}
     public Saved() {
     }
-    public  Saved(ObjectId id, User user, Novel novel){
+    public  Saved(ObjectId id, User user, Comic comic){
         this._id = id;
         this.user=user;
-        this.novel=novel;
+        this.comic = comic;
     }
-    public Saved(User user, Novel novel){
+    public Saved(User user, Comic comic){
         this._id = new ObjectId();
         this.user=user;
-        this.novel=novel;
+        this.comic = comic;
     }
 
 }

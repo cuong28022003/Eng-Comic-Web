@@ -12,7 +12,7 @@ import ChangePassword from './ChangePassword'
 import Profile from './Profile';
 import TuTruyen from './TuTruyen';
 import { toast } from 'react-toastify';
-import CreateNovel from './CreateNovel';
+import CreateComic from './CreateComic';
 
 function Account() {
   const menu = [//menu dựa trên từng loại tài khoản
@@ -89,7 +89,7 @@ function Account() {
               <Route path='profile' element={<Profile userInfo={userInfo} changeUserInfo={changeUserInfo} />}></Route>
               <Route path='change-password' element={<ChangePassword />}></Route>
               <Route path='tu-truyen/*' element={<TuTruyen userInfo={userInfo} />}></Route>
-              <Route path='dang-truyen' element={<CreateNovel userInfo={userInfo} />}></Route>
+              <Route path='dang-truyen' element={<CreateComic userInfo={userInfo} />}></Route>
             </Routes>
           </div>
         </div>

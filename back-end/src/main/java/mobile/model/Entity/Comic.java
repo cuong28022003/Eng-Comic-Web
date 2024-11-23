@@ -11,19 +11,19 @@ import java.util.Date;
 
 @RestResource(exported=false)
 @Document(collection = "novels")
-public class Novel {
+public class Comic {
     @Id
     protected ObjectId _id;
-    protected int danhgia;
-    protected String hinhanh;
-    protected int luotdoc;
+    protected int rating;
+    protected String image;
+    protected int views;
     @DBRef
-    protected User nguoidangtruyen;
-    protected String noidung;
+    protected User uploader;
+    protected String description;
     protected int soluongdanhgia;
-    protected String tacgia;
-    protected String tentruyen;
-    protected String theloai;
+    protected String artist;
+    protected String name;
+    protected String genre;
     protected String trangthai;
     protected String status;
     protected String url;
@@ -32,20 +32,20 @@ public class Novel {
     @LastModifiedDate
     protected Date updateAt;
 
-    public Novel() {
+    public Comic() {
     }
 
-    public Novel(ObjectId _id, int danhgia, String hinhanh, int luotdoc, User nguoidangtruyen, String noidung, int soluongdanhgia, String tacgia, String tentruyen, String theloai, String trangthai, String status, String url, Date createAt, Date updateAt) {
+    public Comic(ObjectId _id, int danhgia, String hinhanh, int luotdoc, User nguoidangtruyen, String noidung, int soluongdanhgia, String tacgia, String tentruyen, String theloai, String trangthai, String status, String url, Date createAt, Date updateAt) {
         this._id = _id;
-        this.danhgia = danhgia;
-        this.hinhanh = hinhanh;
-        this.luotdoc = luotdoc;
-        this.nguoidangtruyen = nguoidangtruyen;
-        this.noidung = noidung;
+        this.rating = danhgia;
+        this.image = hinhanh;
+        this.views = luotdoc;
+        this.uploader = nguoidangtruyen;
+        this.description = noidung;
         this.soluongdanhgia = soluongdanhgia;
-        this.tacgia = tacgia;
-        this.tentruyen = tentruyen;
-        this.theloai = theloai;
+        this.artist = tacgia;
+        this.name = tentruyen;
+        this.genre = theloai;
         this.trangthai = trangthai;
         this.status = status;
         this.url = url;
@@ -61,44 +61,44 @@ public class Novel {
         this._id = _id;
     }
 
-    public int getDanhgia() {
-        return danhgia;
+    public int getRating() {
+        return rating;
     }
 
-    public void setDanhgia(int danhgia) {
-        this.danhgia = danhgia;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
-    public String getHinhanh() {
-        return hinhanh;
+    public String getImage() {
+        return image;
     }
 
-    public void setHinhanh(String hinhanh) {
-        this.hinhanh = hinhanh;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public int getLuotdoc() {
-        return luotdoc;
+    public int getViews() {
+        return views;
     }
 
-    public void setLuotdoc(int luotdoc) {
-        this.luotdoc = luotdoc;
+    public void setViews(int views) {
+        this.views = views;
     }
 
-    public User getNguoidangtruyen() {
-        return nguoidangtruyen;
+    public User getUploader() {
+        return uploader;
     }
 
-    public void setNguoidangtruyen(User nguoidangtruyen) {
-        this.nguoidangtruyen = nguoidangtruyen;
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
     }
 
-    public String getNoidung() {
-        return noidung;
+    public String getDescription() {
+        return description;
     }
 
-    public void setNoidung(String noidung) {
-        this.noidung = noidung;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getSoluongdanhgia() {
@@ -109,28 +109,28 @@ public class Novel {
         this.soluongdanhgia = soluongdanhgia;
     }
 
-    public String getTacgia() {
-        return tacgia;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setTacgia(String tacgia) {
-        this.tacgia = tacgia;
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
-    public String getTentruyen() {
-        return tentruyen;
+    public String getName() {
+        return name;
     }
 
-    public void setTentruyen(String tentruyen) {
-        this.tentruyen = tentruyen;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTheloai() {
-        return theloai;
+    public String getGenre() {
+        return genre;
     }
 
-    public void setTheloai(String theloai) {
-        this.theloai = theloai;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getTrangthai() {

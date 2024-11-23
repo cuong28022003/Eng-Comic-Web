@@ -18,8 +18,8 @@ function CreateNovel({userInfo}) {
     const [preview, setPreview] = useState(avt)
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [tacgia, setTacgia] = useState("");
-    const [theloai, setTheloai] = useState(types[0]);
+    const [artist, setArtist] = useState("");
+    const [genre, setGenre] = useState(types[0]);
     const loading = useSelector(state => state.message.loading)
     const [loadingUser, setLoadingUser] = useState(true)
     const dispatch = useDispatch()
@@ -37,7 +37,7 @@ function CreateNovel({userInfo}) {
 
     const handleCreateNovel = async (data) => {//xử lý gọi tạo truyện mới
         try {
-            apiMain.createNovel(data,user, dispatch, loginSuccess )
+            apiMain.createComic(data,user, dispatch, loginSuccess )
                 .then(res =>{
                     toast.success("Đăng truyện thành công")
                     dispatch(setLoading(false))
@@ -63,12 +63,13 @@ function CreateNovel({userInfo}) {
         uploadBytes(storageRef, image).then((result) => {//upload ảnh
             getDownloadURL(result.ref).then(async (urlImage) => {//lấy liên kết tới ảnh
                 const data = {//payload
-                    tentruyen: name,
-                    hinhanh: urlImage,
-                    tacgia,
-                    theloai,
+                    name: name,
+                    image: urlImage,
+                    artist,
+                    description,
+                    genre,
                     url,
-                    nguoidangtruyen:userInfo?._id
+                    uploader:userInfo?._id
                 }
                 await handleCreateNovel(data)//gọi API
             })
@@ -112,11 +113,11 @@ function CreateNovel({userInfo}) {
                                     </div>
                                     <div className="group-info">
                                         <label style={labelStyle}>Tác giả</label>
-                                        <input required onChange={e => { setTacgia(e.target.value) }} value={tacgia}></input>
+                                        <input required onChange={e => { setArtist(e.target.value) }} value={artist}></input>
                                     </div>
                                     <div className="group-info">
                                         <label for="types">Thể loại</label>
-                                        <select style={labelStyle} onChange={e => { console.log(e.target.value); setTheloai(e.target.value) }} value={theloai} id="types" name="types">
+                                        <select style={labelStyle} onChange={e => { console.log(e.target.value); setGenre(e.target.value) }} value={genre} id="types" name="types">
                                             {
                                                 types.map(item => { return (<option value={item}>{item}</option>) })
                                             }

@@ -17,7 +17,7 @@ public class Chapter {
     protected int chapnumber;
     protected String content;
     @DBRef
-    protected Novel dautruyenId;
+    protected Comic dautruyenId;
     protected String tenchap;
     @CreatedDate
     protected Date createAt;
@@ -27,7 +27,7 @@ public class Chapter {
     public Chapter() {
     }
 
-    public Chapter(ObjectId _id, int chapnumber, String content, Novel dautruyenId, String tenchap, Date createAt, Date updateAt) {
+    public Chapter(ObjectId _id, int chapnumber, String content, Comic dautruyenId, String tenchap, Date createAt, Date updateAt) {
         this._id = _id;
         this.chapnumber = chapnumber;
         this.content = content;
@@ -60,11 +60,11 @@ public class Chapter {
         this.content = content;
     }
 
-    public Novel getDautruyenId() {
+    public Comic getDautruyenId() {
         return dautruyenId;
     }
 
-    public void setDautruyenId(Novel dautruyenId) {
+    public void setDautruyenId(Comic dautruyenId) {
         this.dautruyenId = dautruyenId;
     }
 

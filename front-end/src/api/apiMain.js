@@ -96,7 +96,7 @@ const apiMain = {
         let axi = axiosInstance(user, dispatch, stateSuccess)
         return getData(await axi.get(url, { headers: { Authorization: `Bearer ${user.accessToken}` } }));
     },
-    createNovel: async (params, user, dispatch, stateSuccess) => {
+    createComic: async (params, user, dispatch, stateSuccess) => {
         const url = `/novels/novel/create`
         let axi = axiosInstance(user, dispatch, stateSuccess)
         return (await axi.post(url, params)).data;

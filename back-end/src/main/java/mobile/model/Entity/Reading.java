@@ -14,24 +14,24 @@ public class Reading {
 	protected User user;
     protected int chapnumber;
 	@DBRef
-    protected Novel novel;
+    protected Comic comic;
     
     public Reading() {
     	
     }
     
-	public Reading( User user, int chapnumber, Novel novel) {
+	public Reading( User user, int chapnumber, Comic comic) {
 		this._id = new ObjectId();
 		this.user=user;
 		this.chapnumber = chapnumber;
-		this.novel = novel;
+		this.comic = comic;
 	}
 
-	public Reading(ObjectId _id, User user, int chapnumber, Novel novel) {
+	public Reading(ObjectId _id, User user, int chapnumber, Comic comic) {
 		this._id = _id;
 		this.user=user;
 		this.chapnumber = chapnumber;
-		this.novel = novel;
+		this.comic = comic;
 	}
 
 	public ObjectId get_id() {
@@ -46,11 +46,11 @@ public class Reading {
 	public void setChapnumber(int chapnumber) {
 		this.chapnumber = chapnumber;
 	}
-	public Novel getNovel() {
-		return novel;
+	public Comic getNovel() {
+		return comic;
 	}
-	public void setNovel(Novel novel) {
-		this.novel = novel;
+	public void setNovel(Comic comic) {
+		this.comic = comic;
 	}
 	public User getUser() {
 		return user;

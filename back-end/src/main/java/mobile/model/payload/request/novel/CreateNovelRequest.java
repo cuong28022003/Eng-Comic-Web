@@ -9,10 +9,10 @@ import lombok.*;
 @Data
 
 public class CreateNovelRequest {
-    protected String tentruyen;
-    protected String theloai;
-    protected String tacgia;
+    protected String name;
+    protected String genre;
+    protected String artist;
     protected String url;
-    protected String hinhanh;
-    protected String noidung;
+    protected String image;
+    protected String description;
 }

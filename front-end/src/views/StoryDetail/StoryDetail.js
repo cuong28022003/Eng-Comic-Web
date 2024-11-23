@@ -33,7 +33,7 @@ const nav = [//navigate
 
 function StoryDetail() {
   const { url } = useParams()
-  const [truyen, setTruyen] = useState(null);
+  const [comic, setComic] = useState(null);
   const [catGiu, setCatGiu] = useState(100)
   const [main, setMain] = useState(null)
   const [tab, setTab] = useState('')
@@ -44,7 +44,7 @@ function StoryDetail() {
     const getStory = async () => {
       let params = { url }
       apiMain.getStory(params).then(res => {
-        setTruyen(res)
+        setComic(res)
         setTab('about')//set tab mặc định là About
         setLoadingData(false)
       })
@@ -55,16 +55,16 @@ function StoryDetail() {
   useEffect(() => {//xử lý đổi tab
     switch (tab) {
       case 'about':
-        setMain(<About key={'about'} truyen={truyen} />)
+        setMain(<About key={'about'} comic={comic} />)
         break
       case 'rate':
         setMain(<Rate key={'rate'} />)
         break
       case 'chapter':
-        setMain(<ListChapter key={'chapter'} url={truyen.url} />)
+        setMain(<ListChapter key={'chapter'} url={comic.url} />)
         break
       case 'comment':
-        setMain(<Comment key={'comment'} url={truyen.url} />)
+        setMain(<Comment key={'comment'} url={comic.url} />)
         break
       default:
         setMain(<Donate key={'donate'} />)
@@ -85,23 +85,23 @@ function StoryDetail() {
           <>
             <div className="heroSide d-flex">
               <div className="img-wrap">
-                <img src={truyen?.hinhanh} alt="" />
+                <img src={comic?.hinhanh} alt="" />
               </div>
               <div className="heroSide__main">
-                <h2 className='mb-1'>{truyen?.tentruyen}</h2>
+                <h2 className='mb-1'>{comic?.tentruyen}</h2>
                 <ul className=''>
-                  <li className={liClass}>{truyen?.tacgia}</li>
-                  <li className={liClass}>{truyen?.trangthai}</li>
-                  <li className={liClass}>{truyen?.theloai}</li>
+                  <li className={liClass}>{comic?.tacgia}</li>
+                  <li className={liClass}>{comic?.trangthai}</li>
+                  <li className={liClass}>{comic?.theloai}</li>
                 </ul>
                 <ul className="heroSide__info">
                   <li>
-                    <span className='fs-16 bold'>{truyen?.sochap || '0'}</span>
+                    <span className='fs-16 bold'>{comic?.sochap || '0'}</span>
                     <br />
                     <span>Chương</span>
                   </li>
                   <li>
-                    <span className='fs-16 bold'>{truyen?.luotdoc || '0'}</span>
+                    <span className='fs-16 bold'>{comic?.luotdoc || '0'}</span>
                     <br />
                     <span>Lượt đọc</span>
                   </li>
@@ -115,12 +115,12 @@ function StoryDetail() {
                 </ul>
 
                 <div className="heroSide__rate">
-                  <span className={`fa fa-star ${truyen?.danhgia >= 1 ? 'checked' : ''}`}></span>
-                  <span className={`fa fa-star ${truyen?.danhgia >= 2 ? 'checked' : ''}`}></span>
-                  <span className={`fa fa-star ${truyen?.danhgia >= 3 ? 'checked' : ''}`}></span>
-                  <span className={`fa fa-star ${truyen?.danhgia >= 4 ? 'checked' : ''}`}></span>
-                  <span className={`fa fa-star ${truyen?.danhgia >= 5 ? 'checked' : ''}`}></span>
-                  <span>&nbsp;{truyen?.danhgia}/5   ({truyen?.soluongdanhgia} đánh giá)</span>
+                  <span className={`fa fa-star ${comic?.danhgia >= 1 ? 'checked' : ''}`}></span>
+                  <span className={`fa fa-star ${comic?.danhgia >= 2 ? 'checked' : ''}`}></span>
+                  <span className={`fa fa-star ${comic?.danhgia >= 3 ? 'checked' : ''}`}></span>
+                  <span className={`fa fa-star ${comic?.danhgia >= 4 ? 'checked' : ''}`}></span>
+                  <span className={`fa fa-star ${comic?.danhgia >= 5 ? 'checked' : ''}`}></span>
+                  <span>&nbsp;{comic?.danhgia}/5   ({comic?.soluongdanhgia} đánh giá)</span>
                 </div>
                 <div className=''>
                   <button className='btn-primary mr-1'>Đọc truyện</button>
@@ -160,7 +160,7 @@ function StoryDetail() {
 const About = props => {
   return (<>
     <p>
-      {props.truyen?.noidung}
+      {props.comic?.noidung}
     </p>
   </>)
 }
@@ -204,7 +204,7 @@ export const ListChapter = props => {
           <Grid gap={15} col={props.col || 3} snCol={1}>
             {
               chapters.map((item, index) => {
-                return <Link to={`/truyen/${url}/${item.chapnumber}`}
+                return <Link to={`/comic/${url}/${item.chapnumber}`}
                   key={index} className='text-overflow-1-lines'
                   style={{ "fontSize": `${props.fontsize || 16}px` }}>{item.tenchap}</Link>
               })
