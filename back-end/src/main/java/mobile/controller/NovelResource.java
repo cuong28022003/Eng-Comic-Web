@@ -396,7 +396,7 @@ public class NovelResource {
             throw new BadCredentialsException("Không tìm thấy access token");
         }
     }
-    @DeleteMapping("/{url}")//Delete đầu truyện, sẽ delete chapter, comment, reading liên kết cùng
+    @DeleteMapping("/novel/{url}")//Delete đầu truyện, sẽ delete chapter, comment, reading liên kết cùng
     @ResponseBody
     public ResponseEntity<SuccessResponse> deleteNovel(@PathVariable String url,HttpServletRequest request){
         String authorizationHeader = request.getHeader(AUTHORIZATION);

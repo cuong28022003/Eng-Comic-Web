@@ -119,21 +119,21 @@ const Readings = ({ dispatch, user }) => {
 };
 
 const StoryCreate = ({ userInfo }) => {
-  const [storys, setStorys] = useState([]);
+  const [comics, setComics] = useState([]);
   const [listChap, setListChap] = useState(false);
   const [editNovel, setEditNovel] = useState(false);
   const user = useSelector((state) => state.auth.login.user);
   const dispatch = useDispatch();
   const [url, setUrl] = useState("");
   useEffect(async () => {
-    getStorys();
+    getComics();
   }, [userInfo]);
 
-  const getStorys = async () => {
+  const getComics = async () => {
     apiMain
       .getStorysByUsername({ username: userInfo?.username })
       .then((res) => {
-        setStorys(res);
+        setComics(res);
       })
       .catch((err) => {
         console.log(err);
@@ -151,7 +151,7 @@ const StoryCreate = ({ userInfo }) => {
         .deleteNovel({ url: e.target.name }, user, dispatch, loginSuccess)
         .then((res) => {
           console.log(res);
-          getStorys();
+          getComics();
           toast.success(res.message, {
             hideProgressBar: true,
             autoClose: 1000,
@@ -196,7 +196,7 @@ const StoryCreate = ({ userInfo }) => {
           onClickBackFromEditNovel={onClickBackFromEditNovel}
         />
       ) : (
-        storys.map((data) => {
+        comics.map((data) => {
           return (
             <div key={data._id}>
               <div className="reading-card">
@@ -560,6 +560,7 @@ function EditNovel({ url, user, dispatch, onClickBackFromEditNovel }) {
             image: urlImage,
             artist: artist,
             genre: genre,
+            description: description,
             url,
             id,
           };
@@ -572,6 +573,7 @@ function EditNovel({ url, user, dispatch, onClickBackFromEditNovel }) {
         image: preview,
         artist: artist,
         genre: genre,
+        description: description,
         url,
         id,
       };
