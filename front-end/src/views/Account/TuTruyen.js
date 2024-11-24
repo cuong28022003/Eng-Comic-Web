@@ -543,43 +543,45 @@ function EditNovel({ url, user, dispatch, onClickBackFromEditNovel }) {
   const handleEdit = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
+
+    // Normalize and generate URL slug based on the updated name
+    const updatedUrl = name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .split(" ")
+      .filter((i) => i !== " ")
+      .join("-")
+      .toLowerCase();
+
+    let data = {
+      name: name,
+      artist: artist,
+      genre: genre,
+      description: description,
+      url: updatedUrl,
+      id: id,
+    };
+
     if (image) {
-      const url = name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .split(" ")
-        .filter((i) => i !== " ")
-        .join("-")
-        .toLowerCase();
-      const storageRef = ref(storage, `/images/truyen/${url}`);
+      // Upload image if a new one is provided
+      const storageRef = ref(storage, `/images/truyen/${updatedUrl}`);
       uploadBytes(storageRef, image).then((result) => {
         getDownloadURL(result.ref).then(async (urlImage) => {
-          //lấy liên kết tới ảnh
-          const data = {
-            name: name,
-            image: urlImage,
-            artist: artist,
-            genre: genre,
-            description: description,
-            url,
-            id,
-          };
+          // Update the image URL in the data object
+          data.image = urlImage;
           await handleEditNovel(data);
         });
       });
     } else if (preview) {
-      const data = {
-        name: name,
-        image: preview,
-        artist: artist,
-        genre: genre,
-        description: description,
-        url,
-        id,
-      };
+      // Use the existing image preview if no new image is provided
+      data.image = preview;
+      await handleEditNovel(data);
+    } else {
+      // Handle cases where no image is provided
       await handleEditNovel(data);
     }
   };
+
 
   ///OnChange event
   const onChangeName = (e) => {
