@@ -1,7 +1,6 @@
 package mobile.model.payload.request.novel;
 
 import lombok.*;
-import org.bson.types.ObjectId;
 
 @Getter
 @Setter
@@ -10,11 +9,11 @@ import org.bson.types.ObjectId;
 @Data
 
 public class UpdateNovelRequest {
-    protected String tentruyen;
+    protected String name;
     protected String id;
-    protected String theloai;
-    protected String tacgia;
+    protected String genre;
+    protected String artist;
     protected String url;
-    protected String hinhanh;
-    protected String noidung;
+    protected String image;
+    protected String description;
 }

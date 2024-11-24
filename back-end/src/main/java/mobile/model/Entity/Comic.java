@@ -20,11 +20,10 @@ public class Comic {
     @DBRef
     protected User uploader;
     protected String description;
-    protected int soluongdanhgia;
+    protected int reviewCount;
     protected String artist;
     protected String name;
     protected String genre;
-    protected String trangthai;
     protected String status;
     protected String url;
     @CreatedDate
@@ -35,18 +34,17 @@ public class Comic {
     public Comic() {
     }
 
-    public Comic(ObjectId _id, int danhgia, String hinhanh, int luotdoc, User nguoidangtruyen, String noidung, int soluongdanhgia, String tacgia, String tentruyen, String theloai, String trangthai, String status, String url, Date createAt, Date updateAt) {
+    public Comic(ObjectId _id, int rating, String image, int views, User uploader, String description, int reviewCount, String artist, String name, String genre, String status, String url, Date createAt, Date updateAt) {
         this._id = _id;
-        this.rating = danhgia;
-        this.image = hinhanh;
-        this.views = luotdoc;
-        this.uploader = nguoidangtruyen;
-        this.description = noidung;
-        this.soluongdanhgia = soluongdanhgia;
-        this.artist = tacgia;
-        this.name = tentruyen;
-        this.genre = theloai;
-        this.trangthai = trangthai;
+        this.rating = rating;
+        this.image = image;
+        this.views = views;
+        this.uploader = uploader;
+        this.description = description;
+        this.reviewCount = reviewCount;
+        this.artist = artist;
+        this.name = name;
+        this.genre = genre;
         this.status = status;
         this.url = url;
         this.createAt = createAt;
@@ -101,12 +99,12 @@ public class Comic {
         this.description = description;
     }
 
-    public int getSoluongdanhgia() {
-        return soluongdanhgia;
+    public int getReviewCount() {
+        return reviewCount;
     }
 
-    public void setSoluongdanhgia(int soluongdanhgia) {
-        this.soluongdanhgia = soluongdanhgia;
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
     }
 
     public String getArtist() {
@@ -131,14 +129,6 @@ public class Comic {
 
     public void setGenre(String genre) {
         this.genre = genre;
-    }
-
-    public String getTrangthai() {
-        return trangthai;
-    }
-
-    public void setTrangthai(String trangthai) {
-        this.trangthai = trangthai;
     }
 
     public String getStatus() {
