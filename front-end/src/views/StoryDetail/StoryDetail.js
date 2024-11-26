@@ -85,14 +85,14 @@ function StoryDetail() {
           <>
             <div className="heroSide d-flex">
               <div className="img-wrap">
-                <img src={comic?.hinhanh} alt="" />
+                <img src={comic?.image} alt="" />
               </div>
               <div className="heroSide__main">
-                <h2 className='mb-1'>{comic?.tentruyen}</h2>
+                <h2 className='mb-1'>{comic?.name}</h2>
                 <ul className=''>
-                  <li className={liClass}>{comic?.tacgia}</li>
-                  <li className={liClass}>{comic?.trangthai}</li>
-                  <li className={liClass}>{comic?.theloai}</li>
+                  <li className={liClass}>{comic?.artist}</li>
+                  <li className={liClass}>{comic?.status}</li>
+                  <li className={liClass}>{comic?.genre}</li>
                 </ul>
                 <ul className="heroSide__info">
                   <li>
@@ -160,7 +160,7 @@ function StoryDetail() {
 const About = props => {
   return (<>
     <p>
-      {props.comic?.noidung}
+      {props.comic?.description}
     </p>
   </>)
 }
@@ -180,7 +180,7 @@ export const ListChapter = props => {
   useEffect(() => {
     const loadList = async () => {//xử lý gọi API danh sách truyện
       const params = {//payload
-        page: currentPage,
+        page: currentPage - 1,
         size: 20
       }
 

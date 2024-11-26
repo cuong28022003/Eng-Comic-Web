@@ -75,21 +75,21 @@ const apiMain = {
         let axi = axiosInstance(user, dispatch, stateSuccess)
         return (await axi.post(url, params, { headers: { Authorization: `Bearer ${user.accessToken}` } })).data;
     },
-    createChapter: async (params, user, dispatch, stateSuccess) => {
+    createChapter: async (data, user, dispatch, stateSuccess) => {
         const url = `/novels/novel/chuong/create`
         let axi = axiosInstance(user, dispatch, stateSuccess)
-        return getData(await axi.post(url, params));
+        return getData(await axi.post(url, data));
     },
-    updateChapter: async (params, user, dispatch, stateSuccess) => {
+    updateChapter: async (data, user, dispatch, stateSuccess) => {
         const url = `/novels/novel/chuong/edit`
         let axi = axiosInstance(user, dispatch, stateSuccess)
-        return getData(await axi.put(url, params));
+        return getData(await axi.put(url, data));
     },
 
-    deleteChapter: async (params, user, dispatch, stateSuccess) => {
+    deleteChapter: async (data, user, dispatch, stateSuccess) => {
         const url = `/novels/novel/chuong`
         let axi = axiosInstance(user, dispatch, stateSuccess)
-        return getData(await axi.delete(url, { params }));
+        return getData(await axi.delete(url, { data }));
     },
     getReadings: async (user, dispatch, stateSuccess) => {
         const url = `/novels/readings`

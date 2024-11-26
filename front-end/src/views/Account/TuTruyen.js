@@ -173,7 +173,7 @@ const StoryCreate = ({ userInfo }) => {
     setEditNovel(false);
   });
 
-  const onClickTruyen = (e) => {
+  const onClickComic = (e) => {
     setUrl(e.target.name);
     setListChap(true);
   };
@@ -205,7 +205,7 @@ const StoryCreate = ({ userInfo }) => {
                 </div>
                 <div className="reading-card__content">
                   <a
-                    onClick={onClickTruyen}
+                    onClick={onClickComic}
                     name={data?.url}
                     className="reading-card__title"
                   >
@@ -233,18 +233,18 @@ const StoryCreate = ({ userInfo }) => {
 const ListChap = ({ url, user, dispatch, onClickBackFromListChap }) => {
   const [chapters, setChapters] = useState([]);
   const location = useLocation();
-  const [addChap, setAddChap] = useState(false);
-  const [chapnumber, setChapnumber] = useState(null);
+  const [addChapter, setAddChapter] = useState(false);
+  const [chapterNumber, setChapterNumber] = useState(null);
 
   const onClickUpdateChap = (e) => {
-    setChapnumber(e.target.name);
-    setAddChap(true);
+    setChapterNumber(e.target.name);
+    setAddChapter(true);
   };
   const onClickDeleteChap = (e) => {
     if (e.target.name) {
       apiMain
         .deleteChapter(
-          { url, chapnumber: e.target.name },
+          {url: url, chapterNumber: e.target.name},
           user,
           dispatch,
           loginSuccess
@@ -277,18 +277,18 @@ const ListChap = ({ url, user, dispatch, onClickBackFromListChap }) => {
 
   const onClickAddChapter = (e) => {
     e.preventDefault();
-    setAddChap(true);
-    setChapnumber(null);
+    setAddChapter(true);
+    setChapterNumber(null);
   };
   const onClickBackFromAddChap = useCallback(() => {
-    setAddChap(false);
+    setAddChapter(false);
   });
   return (
     <>
-      {addChap ? (
+      {addChapter ? (
         <AddChapter
           url={url}
-          chapnumber={chapnumber}
+          chapnumber={chapterNumber}
           user={user}
           dispatch={dispatch}
           onClickBackFromAddChap={onClickBackFromAddChap}
@@ -374,13 +374,13 @@ const AddChapter = ({
   }, []);
 
   const onClickAddChapter = async (e) => {
-    const params = { content, tenchap: tenchuong, url };
+    const data = { content, tenchap: tenchuong, url };
     if (content.length <= 10) {
       toast.warning("Nội dung chương phải dài hơn 10 kí tự");
       return;
     }
     apiMain
-      .createChapter(params, user, dispatch, loginSuccess)
+      .createChapter(data, user, dispatch, loginSuccess)
       .then((res) => {
         getChapters();
         toast.success("Thêm chương thành công");
@@ -395,13 +395,13 @@ const AddChapter = ({
   };
 
   const onClickEditChapter = async (e) => {
-    const params = { content, tenchap: tenchuong, url, chapnumber };
+    const data = { content, tenchap: tenchuong, url, chapnumber };
     if (content.length <= 10) {
       toast.warning("Nội dung chương phải dài hơn 10 kí tự");
       return;
     }
     apiMain
-      .updateChapter(params, user, dispatch, loginSuccess)
+      .updateChapter(data, user, dispatch, loginSuccess)
       .then((res) => {
         getChapters();
         toast.success("Sửa truyện thành công");

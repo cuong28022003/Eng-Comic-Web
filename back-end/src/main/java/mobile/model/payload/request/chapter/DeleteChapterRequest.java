@@ -10,5 +10,5 @@ import lombok.*;
 
 public class DeleteChapterRequest {
     protected String url;
-    protected int chapnumber;
+    protected int chapterNumber;
 }

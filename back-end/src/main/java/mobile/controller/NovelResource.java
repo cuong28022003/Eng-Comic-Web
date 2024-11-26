@@ -564,7 +564,7 @@ public class NovelResource {
             if(comic == null){
                 throw new RecordNotFoundException("Không tìm thấy truyện");
             }
-            Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(comic.getId(), deleteChapterRequest.getChapnumber());
+            Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(comic.getId(), deleteChapterRequest.getChapterNumber());
             if(chapter == null){
                 throw new RecordNotFoundException("Không tìm thấy chương cần chỉnh sửa");
             }
