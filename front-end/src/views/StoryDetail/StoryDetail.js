@@ -166,12 +166,12 @@ function StoryDetail() {
                 </ul>
                 <ul className="heroSide__info">
                   <li>
-                    <span className="fs-16 bold">{comic?.sochap || "0"}</span>
+                    <span className="fs-16 bold">{comic?.chapterCount || "0"}</span>
                     <br />
                     <span>Chương</span>
                   </li>
                   <li>
-                    <span className="fs-16 bold">{comic?.luotdoc || "0"}</span>
+                    <span className="fs-16 bold">{comic?.views || "0"}</span>
                     <br />
                     <span>Lượt đọc</span>
                   </li>

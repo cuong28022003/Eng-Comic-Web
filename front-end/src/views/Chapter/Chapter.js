@@ -18,21 +18,21 @@ function Chapter(props) {
     const dispatch = useDispatch()
     const contentRef = useRef(null)
 
-    useEffect(() => {//xử lý đánh dấu truyện đang đọc
-        const handleSetReading = async () => {//tạo hàm
-            if (user) {
-                const params = {
-                    url, chapNumber: chapnum
-                }
-                apiMain.setReading(params, user, dispatch, loginSuccess)
-            }
-        }
-        handleSetReading();//gọi hàm
-    }, [])
+    // useEffect(() => {//xử lý đánh dấu truyện đang đọc
+    //     const handleSetReading = async () => {//tạo hàm
+    //         if (user) {
+    //             const params = {
+    //                 url, chapNumber: chapnum
+    //             }
+    //             apiMain.setReading(params, user, dispatch, loginSuccess)
+    //         }
+    //     }
+    //     handleSetReading();//gọi hàm
+    // }, [])
 
     useEffect(() => {//Xử lý load dữ liệu chương truyện
         const getChapter = async () => {//tạo hàm
-            apiMain.getChapterByNumber(url, chapnum)
+            apiMain.getChapterByNumber(url, chapnum, user, dispatch, loginSuccess)
                 .then(res => {
                     setChapter(getData(res))
                 })

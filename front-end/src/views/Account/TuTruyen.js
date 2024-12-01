@@ -105,13 +105,7 @@ const Readings = ({ dispatch, user }) => {
       {readings.map((item, i) => (
         <div key={item._id}>
           <Reading
-            data={{
-              tentruyen: item.dautruyenId.tentruyen,
-              hinhanh: item.dautruyenId.hinhanh,
-              dadoc: item.chapNumber,
-              total: item.dautruyenId?.sochap,
-              url: item.dautruyenId.url,
-            }}
+            data={item}
           />
           <hr />
         </div>
