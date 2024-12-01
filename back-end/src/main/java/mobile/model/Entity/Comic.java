@@ -20,7 +20,7 @@ public class Comic {
     @DBRef
     protected User uploader;
     protected String description;
-    protected int reviewCount;
+    protected int ratingCount;
     protected String artist;
     protected String name;
     protected String genre;
@@ -34,14 +34,14 @@ public class Comic {
     public Comic() {
     }
 
-    public Comic(ObjectId _id, int rating, String image, int views, User uploader, String description, int reviewCount, String artist, String name, String genre, String status, String url, Date createAt, Date updateAt) {
+    public Comic(ObjectId _id, int rating, String image, int views, User uploader, String description, int ratingCount, String artist, String name, String genre, String status, String url, Date createAt, Date updateAt) {
         this._id = _id;
         this.rating = rating;
         this.image = image;
         this.views = views;
         this.uploader = uploader;
         this.description = description;
-        this.reviewCount = reviewCount;
+        this.ratingCount = ratingCount;
         this.artist = artist;
         this.name = name;
         this.genre = genre;
@@ -99,12 +99,12 @@ public class Comic {
         this.description = description;
     }
 
-    public int getReviewCount() {
-        return reviewCount;
+    public int getRatingCount() {
+        return ratingCount;
     }
 
-    public void setReviewCount(int reviewCount) {
-        this.reviewCount = reviewCount;
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
     }
 
     public String getArtist() {

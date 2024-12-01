@@ -8,6 +8,7 @@ import Section, { SectionHeading, SectionBody } from '../../components/section'
 function Search(props) {
   const [datas, setDatas] = useState([])
   const query = useSelector(state => state?.message?.query || "")
+  console.log("query: " + query)
   useEffect(() => {
     const handleSearch = async () => {//hàm xử lý gọi API search
       if (!query) {//Kiểm tra xem có nhập dữ liệu vào input search không
@@ -15,7 +16,7 @@ function Search(props) {
         return
       }
       try {
-        const response = await apiMain.getStorysByName({ search: query })
+        const response = await apiMain.getStorysByName({ name: query })
         if (response) {
           setDatas(response)
         }

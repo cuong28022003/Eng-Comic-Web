@@ -186,31 +186,31 @@ function StoryDetail() {
                 <div className="heroSide__rate">
                   <span
                     className={`fa fa-star ${
-                      comic?.danhgia >= 1 ? "checked" : ""
+                      comic?.rating >= 1 ? "checked" : ""
                     }`}
                   ></span>
                   <span
                     className={`fa fa-star ${
-                      comic?.danhgia >= 2 ? "checked" : ""
+                      comic?.rating >= 2 ? "checked" : ""
                     }`}
                   ></span>
                   <span
                     className={`fa fa-star ${
-                      comic?.danhgia >= 3 ? "checked" : ""
+                      comic?.rating >= 3 ? "checked" : ""
                     }`}
                   ></span>
                   <span
                     className={`fa fa-star ${
-                      comic?.danhgia >= 4 ? "checked" : ""
+                      comic?.rating >= 4 ? "checked" : ""
                     }`}
                   ></span>
                   <span
                     className={`fa fa-star ${
-                      comic?.danhgia >= 5 ? "checked" : ""
+                      comic?.rating >= 5 ? "checked" : ""
                     }`}
                   ></span>
                   <span>
-                    &nbsp;{comic?.danhgia}/5 ({comic?.soluongdanhgia} đánh giá)
+                    &nbsp;{comic?.rating}/5 ({comic?.reviewCount} đánh giá)
                   </span>
                 </div>
                 <div className="">
