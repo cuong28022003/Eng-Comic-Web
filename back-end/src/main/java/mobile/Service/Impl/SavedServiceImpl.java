@@ -29,11 +29,11 @@ public class SavedServiceImpl implements SavedService {
         return savedRepository.save(saved);
     }
     @Override
-    public Saved deleteSaved(ObjectId userId, ObjectId novelId) {
-        return savedRepository.deleteByParam(userId,novelId);
+    public Saved deleteSaved(ObjectId userId, ObjectId comicId) {
+        return savedRepository.deleteByParam(userId, comicId);
     }
     @Override
-    public Saved getSaved(ObjectId userId, ObjectId novelId) {
-        return savedRepository.findByParam(userId,novelId);
+    public Saved getSaved(ObjectId userId, ObjectId comicId) {
+        return savedRepository.findByParam(userId, comicId);
     }
 }

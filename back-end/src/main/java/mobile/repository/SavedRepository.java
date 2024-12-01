@@ -12,12 +12,12 @@ import java.util.Optional;
 
 @EnableMongoRepositories
 public interface SavedRepository extends MongoRepository<Saved, ObjectId> {
-    @Query("{'user.$id':?0}")
+    @Query("{'user._id':?0}")
     List<Saved> findByUserId(ObjectId id);
 
-    @Query(value="{$and:[{'user.$id':?0},{'novel.$id':?1}]}")
-    Saved findByParam(ObjectId userId,ObjectId novelId);
+    @Query("{ 'user._id' : ?0, 'comic._id' : ?1 }")
+    Saved findByParam(ObjectId userId,ObjectId comicId);
 
-    @Query(value="{$and:[{'user.$id':?0},{'novel.$id':?1}]}",delete = true)
+    @Query(value="{'user._id':?0, 'comic.$id':?1}",delete = true)
     Saved deleteByParam(ObjectId userId,ObjectId novelId);
 }

@@ -31,6 +31,7 @@ export const axiosInstance = (user, dispatch, stateSuccess) => {
     baseURL: baseURL,
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${user.accessToken}`,
     },
     paramsSerializer: (params) => queryString.stringify(params),
   });

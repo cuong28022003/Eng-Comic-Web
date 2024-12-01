@@ -70,6 +70,11 @@ public class SavedResource {
                 throw new RecordNotFoundException("Novel is not existed");
             }
 
+            Saved isSaved = savedService.getSaved(user.getId(), comic.getId());
+            if (isSaved != null){
+                throw new IllegalArgumentException("Novel is already saved");
+            }
+
             Saved saved = new Saved(user, comic);
             savedService.createSaved(saved);
 

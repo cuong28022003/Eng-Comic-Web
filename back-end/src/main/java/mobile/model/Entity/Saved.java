@@ -19,8 +19,8 @@ public class Saved {
     public void setId(ObjectId _id) {this._id = _id;}
     public User getUser() {return user;}
     public void setUser(User user) {this.user = user;}
-    public Comic getNovel() {return comic;}
-    public void setNovel(Comic comic) {this.comic = comic;}
+    public Comic getComic() {return comic;}
+    public void setComic(Comic comic) {this.comic = comic;}
     public Saved() {
     }
     public  Saved(ObjectId id, User user, Comic comic){

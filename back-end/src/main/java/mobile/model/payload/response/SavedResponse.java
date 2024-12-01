@@ -9,9 +9,9 @@ import org.bson.types.ObjectId;
 @Setter
 @NoArgsConstructor
 public class SavedResponse {
-    protected String tentruyen;
-    protected String hinhanh;
+    protected String name;
+    protected String image;
     protected String url;
-    protected String tacgia;
+    protected String artist;
     protected ObjectId id;
 }

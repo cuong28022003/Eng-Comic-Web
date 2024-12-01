@@ -9,10 +9,10 @@ import java.util.List;
 public class SavedMapping {
     public static SavedResponse EntityToResponse(Saved saved){
         SavedResponse savedResponse = new SavedResponse();
-        savedResponse.setTentruyen(saved.getNovel().getName());
-        savedResponse.setHinhanh(saved.getNovel().getImage());
-        savedResponse.setUrl(saved.getNovel().getUrl());
-        savedResponse.setTacgia(saved.getNovel().getArtist());
+        savedResponse.setName(saved.getComic().getName());
+        savedResponse.setImage(saved.getComic().getImage());
+        savedResponse.setUrl(saved.getComic().getUrl());
+        savedResponse.setArtist(saved.getComic().getArtist());
         savedResponse.setId(saved.getId());
         return savedResponse;
     }

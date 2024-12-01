@@ -21,6 +21,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { setLoading } from "../../redux/messageSlice";
 import Loading from "../../components/Loading";
 import LoadingData from "../../components/LoadingData";
+import Saved from "../../components/Saved";
 const nav = [
   {
     path: "reading",
@@ -37,6 +38,7 @@ const nav = [
 ];
 function TuTruyen({ userInfo }) {
   const user = useSelector((state) => state.auth.login.user);
+  console.log(user);
   const dispatch = useDispatch();
   const location = useLocation();
   const active = nav.findIndex(
@@ -71,7 +73,7 @@ function TuTruyen({ userInfo }) {
         <Route
           key={"saved"}
           path="saved"
-          element={<Readings key={"reading"} />}
+          element={<Saveds key={"saved"} user={user} dispatch={dispatch} />}
         />
         <Route
           key={"created"}
@@ -114,6 +116,45 @@ const Readings = ({ dispatch, user }) => {
           <hr />
         </div>
       ))}
+    </div>
+  );
+};
+
+const Saveds = ({ user, dispatch }) => {
+  const [savedComics, setSavedComics] = useState([]);
+
+  // Lấy danh sách truyện đã lưu từ API
+  useEffect(() => {
+    if (user) {
+      const getSavedComics = async () => {
+        try {
+          const response = await apiMain.getSavedComics(
+            user,
+            dispatch,
+            loginSuccess
+          );
+          console.log(response);
+          setSavedComics(response);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getSavedComics();
+    }
+  }, [user]);
+
+  return (
+    <div className="saved-list">
+      {savedComics.length > 0 ? (
+        savedComics.map((comic) => (
+          <div key={comic.id}>
+            <Saved data={comic} />
+            <hr />
+          </div>
+        ))
+      ) : (
+        <p>Chưa có truyện nào được đánh dấu.</p>
+      )}
     </div>
   );
 };
@@ -244,7 +285,7 @@ const ListChap = ({ url, user, dispatch, onClickBackFromListChap }) => {
     if (e.target.name) {
       apiMain
         .deleteChapter(
-          {url: url, chapterNumber: e.target.name},
+          { url: url, chapterNumber: e.target.name },
           user,
           dispatch,
           loginSuccess
@@ -496,7 +537,7 @@ function EditNovel({ url, user, dispatch, onClickBackFromEditNovel }) {
 
   useEffect(async () => {
     if (url) {
-      apiMain.getStory({ url }).then((res) => {
+      apiMain.getComic({ url }).then((res) => {
         setPreview(res.image);
         setName(res.name);
         setDescription(res.description);
@@ -581,7 +622,6 @@ function EditNovel({ url, user, dispatch, onClickBackFromEditNovel }) {
       await handleEditNovel(data);
     }
   };
-
 
   ///OnChange event
   const onChangeName = (e) => {
