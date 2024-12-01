@@ -49,17 +49,18 @@ function Comment(props) {
         const loadComment = async () => {
             const data = await getComments()
             console.log(data)
-            setCount(data?.length || 0)
+            setCount(data?.length || 0) 
             setComments(data)
         }
         loadComment();
-    }, [])
+    }, [comments])
 
     
 
     const onClickDeleteComment = async (e) => {//xử lý xoá comment
         if (user) {//Nếu đã đăng nhập thì mới đc phép xoá
-            apiMain.deleteComment(user, { id: e.target.name }, dispatch, loginSuccess)
+            console.log("commentId: " + e.currentTarget.dataset.id);
+            apiMain.deleteComment({ id:  e.currentTarget.dataset.id }, user, dispatch, loginSuccess)
                 .then(async (res) => {
                     toast.success(res.message, { hideProgressBar: true, pauseOnHover: false, autoClose: 1000 })
                     const data = await getComments()
@@ -122,7 +123,7 @@ function Comment(props) {
                                             <h4>{item.tenhienthi}</h4>
                                             <span className='fs-12 fw-4 text-secondary'>
                                                 {
-                                                    calDate(item.createdAt)
+                                                    calDate(item.date)
                                                 }
                                             </span>
                                         </div>
@@ -131,7 +132,7 @@ function Comment(props) {
                                         </div>
                                         <ul className="comment__nav">
                                             {item.username === user?.username ?
-                                                <li name={item.id} onClick={onClickDeleteComment} className='fs-14 text-secondary'><i className="fa-solid fa-trash"></i> Xoá</li> : ''
+                                                <li data-id={item.id} onClick={onClickDeleteComment} className='fs-14 text-secondary'><i className="fa-solid fa-trash"></i> Xoá</li> : ''
                                             }
                                             <li className='fs-14 text-secondary'><i className="fa-solid fa-reply"></i> Trả lời</li>
                                             <li className='fs-14 text-secondary'><i className="fa-solid fa-flag"></i> Báo xấu</li>

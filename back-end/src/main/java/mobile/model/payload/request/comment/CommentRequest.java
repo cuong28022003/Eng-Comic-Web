@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class CommentRequest {
-    protected String urltruyen;
+    protected String url;
     protected String parentId;
     protected String content;
 }

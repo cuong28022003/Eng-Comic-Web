@@ -143,25 +143,21 @@ const apiMain = {
   ///Comment
 
   createComment: async (user, params, dispatch, stateSuccess) => {
-    const url = `/comment/create`;
+    const url = `/comment`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
     return getData(
-      await axi.post(url, params, {
-        headers: { Authorization: `Bearer ${user.accessToken}` },
-      })
+      await axi.post(url, params)
     );
   },
   getCommentsByUrl: async (params) => {
-    const url = `/comment/getcomment/${params.url}`;
+    const url = `/comment/${params.url}`;
     return getData(await axiosClient.get(url));
   },
-  deleteComment: async (user, params, dispatch, stateSuccess) => {
-    const url = `/comment/delete`;
+  deleteComment: async (params, user, dispatch, stateSuccess) => {
+    const url = `/comment/${params.id}`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
     return getData(
-      await axi.post(url, params, {
-        headers: { Authorization: `Bearer ${user.accessToken}` },
-      })
+      await axi.delete(url)
     );
   },
 
