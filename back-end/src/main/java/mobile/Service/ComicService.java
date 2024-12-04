@@ -22,4 +22,6 @@ public interface ComicService {
     Optional<Comic> findById(ObjectId id);
     void DeleteComic(Comic comic);
     List<Comic> findByNameLike(String name);
+    List<Comic> getComicsByGenre(String genre);
+    List<Comic> getComicsByArtist(String artist);
 }

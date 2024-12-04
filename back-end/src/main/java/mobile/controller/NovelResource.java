@@ -585,4 +585,16 @@ public class NovelResource {
             throw new BadCredentialsException("Không tìm thấy access token");
         }
     }
+
+    // API lấy truyện theo thể loại
+    @GetMapping("/genre/{genre}")
+    public List<Comic> getComicsByGenre(@PathVariable String genre) {
+        return comicService.getComicsByGenre(genre);
+    }
+
+    // API lấy truyện theo tác giả
+    @GetMapping("/artist/{artist}")
+    public List<Comic> getComicsByArtist(@PathVariable String artist) {
+        return comicService.getComicsByArtist(artist);
+    }
 }

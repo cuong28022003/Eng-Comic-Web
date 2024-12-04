@@ -69,10 +69,15 @@ const apiMain = {
     return getData(res);
   },
   getChapterByNumber: async (tentruyen, chapnum, user, dispatch, stateSuccess) => {
-    let axi = axiosInstance(user, dispatch, stateSuccess);
-    return getData(
-      await axi.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
-    );
+    if (user) {
+      let axi = axiosInstance(user, dispatch, stateSuccess);
+      return getData(
+        await axi.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
+      );
+    } else {
+      const res = await axiosClient.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
+      return getData(res)
+    }
   },
   setReading: async (params, user, dispatch, stateSuccess) => {
     const url = `/novels/novel/reading`;
