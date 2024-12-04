@@ -115,15 +115,15 @@ public class NovelResource {
     }*/
     @GetMapping("/search")
     @ResponseBody
-    public ResponseEntity<List<Comic>> searchNovelByTenTruyenLike(@RequestParam(defaultValue = "") String theloai,
-                                                                  @RequestParam(defaultValue = "") String tentruyen, @RequestParam(defaultValue = "tentruyen") String sort,
+    public ResponseEntity<List<Comic>> searchNovelByTenTruyenLike(@RequestParam(defaultValue = "") String genre,
+                                                                  @RequestParam(defaultValue = "") String name, @RequestParam(defaultValue = "name") String sort,
                                                                   @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         List<Comic> comicList = null;
-        if (theloai.equals("")) {
-            comicList = comicService.SearchByName(tentruyen, pageable);
+        if (genre.equals("")) {
+            comicList = comicService.SearchByName(name, pageable);
         } else {
-            comicList = comicService.findByNameLike(tentruyen);
+            comicList = comicService.findByNameLike(name);
         }
 
         if (comicList == null) {
@@ -584,5 +584,17 @@ public class NovelResource {
         } else {
             throw new BadCredentialsException("Không tìm thấy access token");
         }
+    }
+
+    // API lấy truyện theo thể loại
+    @GetMapping("/genre/{genre}")
+    public List<Comic> getComicsByGenre(@PathVariable String genre) {
+        return comicService.getComicsByGenre(genre);
+    }
+
+    // API lấy truyện theo tác giả
+    @GetMapping("/artist/{artist}")
+    public List<Comic> getComicsByArtist(@PathVariable String artist) {
+        return comicService.getComicsByArtist(artist);
     }
 }

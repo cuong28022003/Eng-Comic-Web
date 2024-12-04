@@ -97,4 +97,15 @@ public class ComicServiceImpl implements ComicService {
         log.info("Searching Novel by firstname like: "+name);
         return comicRepository.findByNameLike(name);
     }
+
+    @Override
+    public List<Comic> getComicsByGenre(String genre) {
+        return comicRepository.findByGenre(genre);
+    }
+
+    @Override
+    public List<Comic> getComicsByArtist(String artist) {
+        return comicRepository.findByArtist(artist);
+    }
+
 }

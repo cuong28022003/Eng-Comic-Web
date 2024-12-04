@@ -16,9 +16,9 @@ public class CommentMapping {
 
     public static Comment CommentRequestToEntity(CommentRequest commentRequest, User user) {
         ObjectId idParent = null;
-        if(commentRequest.getParentId()!= "")
+        if(commentRequest.getParentId()!= null && !commentRequest.getParentId().isEmpty())
             idParent = new ObjectId(commentRequest.getParentId());
-        return new Comment(commentRequest.getUrltruyen(),user,idParent,commentRequest.getContent());
+        return new Comment(commentRequest.getUrl(),user,idParent,commentRequest.getContent());
     }
 
     public static CommentResponse EntityToResponse(Comment comment) {

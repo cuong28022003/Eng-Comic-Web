@@ -10,7 +10,7 @@ function AllStory() {
     useEffect(() => {
         const loadData = async () => {//hàm gọi API load tất cả truyện có phân trang
             try {
-                const response = await apiMain.getStorys({ page: 1, size: 20 })
+                const response = await apiMain.getStorys({ page: 0, size: 20 })
                 if (response) {
                     setDatas(response)
                 }

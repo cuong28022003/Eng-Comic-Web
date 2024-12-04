@@ -65,13 +65,7 @@ function ListStory() {
             </SectionHeading>
             <SectionBody>
               <div className='list-reading'>
-                {readings.map((item, i) => <Reading key={i} data={{
-                  tentruyen: item.dautruyenId?.tentruyen,
-                  hinhanh: item.dautruyenId?.hinhanh,
-                  dadoc: item.chapNumber,
-                  total: item.dautruyenId?.sochap,
-                  url: item.dautruyenId?.url
-                }} />)}
+                {readings.map((item, i) => <Reading key={i} data={item} />)}
               </div>
             </SectionBody>
           </Section>

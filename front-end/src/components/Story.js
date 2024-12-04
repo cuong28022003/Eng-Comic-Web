@@ -6,14 +6,14 @@ function Story(props) {
     <>
     <div className='story-card'>
         <div className='story-card__img-wrap'>
-            <img src={data.hinhanh} alt=""/>
+            <img src={data.image} alt=""/>
         </div>
         <div className='story-card__content'>
-            <h2 className='story-card__tilte'><Link to={`truyen/${data.url}`}>{data['tentruyen']}</Link></h2>
-            <div className='story-card__description'>{data.noidung}</div>
+            <h2 className='story-card__tilte'><Link to={`truyen/${data.url}`}>{data['name']}</Link></h2>
+            <div className='story-card__description'>{data.description}</div>
             <div className='story-card__info'>
-              <span className='story-card__author'>{data.tacgia}</span>
-              <span className='story-card__type border border-primary color-primary fs-12' style={{padding:4+'px'}}>{data.theloai}</span>
+              <span className='story-card__author'>{data.artist}</span>
+              <span className='story-card__type border border-primary color-primary fs-12' style={{padding:4+'px'}}>{data.genre}</span>
             </div>
         </div>
     </div>

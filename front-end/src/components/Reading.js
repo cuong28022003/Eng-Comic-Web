@@ -19,7 +19,7 @@ const onClickTruyen=(e)=>{//xử lý click vào tên truyện để đọc
           {data.tentruyen}
         </a>
         <div className="reading-card__chap">
-          Đã đọc: {data.dadoc}/{data?.total}
+          Đã đọc: {data.chapnumber}/{data?.sochap}
         </div>
       </div>
     </div>

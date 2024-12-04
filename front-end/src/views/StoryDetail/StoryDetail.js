@@ -111,15 +111,19 @@ function StoryDetail() {
   const handleSaveComic = async () => {
     try {
       const payload = { url: comic?.url };
-      const response = await apiMain.saveComic(
-        payload,
-        user,
-        dispatch,
-        loginSuccess
-      );
-      setIsSaved(true);
-      console.log(response);
-      toast.success("Đánh dấu truyện thành công");
+      if (user) {
+        const response = await apiMain.saveComic(
+          payload,
+          user,
+          dispatch,
+          loginSuccess
+        );
+        setIsSaved(true);
+        console.log(response);
+        toast.success("Đánh dấu truyện thành công");
+      } else {
+        toast.warning("Bạn cần đăng nhập trước");
+      }
     } catch (error) {
       console.error("Error saving comic:", error);
       toast.error("Đánh dấu truyện thất bại");
@@ -166,12 +170,12 @@ function StoryDetail() {
                 </ul>
                 <ul className="heroSide__info">
                   <li>
-                    <span className="fs-16 bold">{comic?.sochap || "0"}</span>
+                    <span className="fs-16 bold">{comic?.chapterCount || "0"}</span>
                     <br />
                     <span>Chương</span>
                   </li>
                   <li>
-                    <span className="fs-16 bold">{comic?.luotdoc || "0"}</span>
+                    <span className="fs-16 bold">{comic?.views || "0"}</span>
                     <br />
                     <span>Lượt đọc</span>
                   </li>
@@ -185,32 +189,27 @@ function StoryDetail() {
 
                 <div className="heroSide__rate">
                   <span
-                    className={`fa fa-star ${
-                      comic?.danhgia >= 1 ? "checked" : ""
-                    }`}
+                    className={`fa fa-star ${comic?.rating >= 1 ? "checked" : ""
+                      }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${
-                      comic?.danhgia >= 2 ? "checked" : ""
-                    }`}
+                    className={`fa fa-star ${comic?.rating >= 2 ? "checked" : ""
+                      }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${
-                      comic?.danhgia >= 3 ? "checked" : ""
-                    }`}
+                    className={`fa fa-star ${comic?.rating >= 3 ? "checked" : ""
+                      }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${
-                      comic?.danhgia >= 4 ? "checked" : ""
-                    }`}
+                    className={`fa fa-star ${comic?.rating >= 4 ? "checked" : ""
+                      }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${
-                      comic?.danhgia >= 5 ? "checked" : ""
-                    }`}
+                    className={`fa fa-star ${comic?.rating >= 5 ? "checked" : ""
+                      }`}
                   ></span>
                   <span>
-                    &nbsp;{comic?.danhgia}/5 ({comic?.soluongdanhgia} đánh giá)
+                    &nbsp;{comic?.rating}/5 ({comic?.reviewCount} đánh giá)
                   </span>
                 </div>
                 <div className="">
@@ -231,9 +230,8 @@ function StoryDetail() {
                 {nav.map((item, index) => {
                   return (
                     <a
-                      className={`navigate__tab fs-20 bold ${
-                        active === index ? "tab_active" : ""
-                      }`}
+                      className={`navigate__tab fs-20 bold ${active === index ? "tab_active" : ""
+                        }`}
                       key={index}
                       name={item.path}
                       onClick={onClickTab}

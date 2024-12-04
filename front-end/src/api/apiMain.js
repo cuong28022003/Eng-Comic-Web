@@ -68,10 +68,16 @@ const apiMain = {
     });
     return getData(res);
   },
-  getChapterByNumber: async (tentruyen, chapnum) => {
-    return getData(
-      await axiosClient.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
-    );
+  getChapterByNumber: async (tentruyen, chapnum, user, dispatch, stateSuccess) => {
+    if (user) {
+      let axi = axiosInstance(user, dispatch, stateSuccess);
+      return getData(
+        await axi.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
+      );
+    } else {
+      const res = await axiosClient.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
+      return getData(res)
+    }
   },
   setReading: async (params, user, dispatch, stateSuccess) => {
     const url = `/novels/novel/reading`;
@@ -142,25 +148,21 @@ const apiMain = {
   ///Comment
 
   createComment: async (user, params, dispatch, stateSuccess) => {
-    const url = `/comment/create`;
+    const url = `/comment`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
     return getData(
-      await axi.post(url, params, {
-        headers: { Authorization: `Bearer ${user.accessToken}` },
-      })
+      await axi.post(url, params)
     );
   },
   getCommentsByUrl: async (params) => {
-    const url = `/comment/getcomment/${params.url}`;
+    const url = `/comment/${params.url}`;
     return getData(await axiosClient.get(url));
   },
-  deleteComment: async (user, params, dispatch, stateSuccess) => {
-    const url = `/comment/delete`;
+  deleteComment: async (params, user, dispatch, stateSuccess) => {
+    const url = `/comment/${params.id}`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
     return getData(
-      await axi.post(url, params, {
-        headers: { Authorization: `Bearer ${user.accessToken}` },
-      })
+      await axi.delete(url)
     );
   },
 

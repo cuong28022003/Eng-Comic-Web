@@ -8,15 +8,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class NovelResponse {
-    protected int danhgia;
-    protected String hinhanh;
-    protected int luotdoc;
-    protected String noidung;
-    protected int soluongdanhgia;
-    protected String tacgia;
-    protected String tentruyen;
-    protected String theloai;
-    protected String trangthai;
+    protected int rating;
+    protected String image;
+    protected int views;
+    protected String description;
+    protected int ratingCount;
+    protected String artist;
+    protected String name;
+    protected String genre;
     protected String status;
     protected String url;
 }

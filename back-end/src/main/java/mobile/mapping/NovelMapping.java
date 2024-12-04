@@ -30,7 +30,7 @@ public class NovelMapping {
         novelDetailResponse.setDescription(comic.getDescription());
         novelDetailResponse.setUploader(comic.getUploader().getTenhienthi());
         novelDetailResponse.setViews(comic.getViews());
-        novelDetailResponse.setReviewCount(comic.getReviewCount());
+        novelDetailResponse.setReviewCount(comic.getRatingCount());
         novelDetailResponse.setChapterCount(sochap);
         novelDetailResponse.setGenre(comic.getGenre());
         novelDetailResponse.setStatus(comic.getStatus());
@@ -47,16 +47,16 @@ public class NovelMapping {
 
     public static NovelResponse EntityToNovelResponse(Comic comic){
         NovelResponse novelResponse = new NovelResponse();
-        novelResponse.setHinhanh(comic.getImage());
-        novelResponse.setTentruyen(comic.getName());
-        novelResponse.setTacgia(comic.getArtist());
+        novelResponse.setImage(comic.getImage());
+        novelResponse.setName(comic.getName());
+        novelResponse.setArtist(comic.getArtist());
         novelResponse.setUrl(comic.getUrl());
-        novelResponse.setDanhgia(comic.getRating());
-        novelResponse.setNoidung(comic.getDescription());
-        novelResponse.setLuotdoc(comic.getViews());
-        novelResponse.setSoluongdanhgia(comic.getReviewCount());
-        novelResponse.setTheloai(comic.getGenre());
-        novelResponse.setTrangthai(comic.getStatus());
+        novelResponse.setRating(comic.getRating());
+        novelResponse.setDescription(comic.getDescription());
+        novelResponse.setViews(comic.getViews());
+        novelResponse.setRatingCount(comic.getRatingCount());
+        novelResponse.setGenre(comic.getGenre());
+        novelResponse.setStatus(comic.getStatus());
         return novelResponse;
     }
 }
