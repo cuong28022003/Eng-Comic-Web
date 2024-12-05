@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import "./_StoryDetail.scss";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import apiMain from "../../api/apiMain";
 import Loading from "../../components/Loading";
 import LoadingData from "../../components/LoadingData";
@@ -48,6 +48,7 @@ function StoryDetail() {
   const active = nav.findIndex((e) => e.path === tab);
   const [loadingData, setLoadingData] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     //load truyện
@@ -148,6 +149,15 @@ function StoryDetail() {
     }
   };
 
+  const onClickArtist = async (artist) => {;
+    navigate("/tim-kiem", { state: { artist: artist } });
+  };
+
+  const onClickGenre = async (genre) => {
+    console.log("genre: " + genre);
+    navigate("/tim-kiem", { state: { genre: genre } });
+  };
+
   //style
   const liClass = "border-primary rounded-2 color-primary";
   return (
@@ -164,13 +174,27 @@ function StoryDetail() {
               <div className="heroSide__main">
                 <h2 className="mb-1">{comic?.name}</h2>
                 <ul className="">
-                  <li className={liClass}>{comic?.artist}</li>
+                  <li
+                    className={liClass}
+                    onClick={() => onClickArtist(comic?.artist)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {comic?.artist}
+                  </li>
                   <li className={liClass}>{comic?.status}</li>
-                  <li className={liClass}>{comic?.genre}</li>
+                  <li
+                    className={liClass}
+                    onClick={() => onClickGenre(comic?.genre)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {comic?.genre}
+                  </li>
                 </ul>
                 <ul className="heroSide__info">
                   <li>
-                    <span className="fs-16 bold">{comic?.chapterCount || "0"}</span>
+                    <span className="fs-16 bold">
+                      {comic?.chapterCount || "0"}
+                    </span>
                     <br />
                     <span>Chương</span>
                   </li>
@@ -189,24 +213,29 @@ function StoryDetail() {
 
                 <div className="heroSide__rate">
                   <span
-                    className={`fa fa-star ${comic?.rating >= 1 ? "checked" : ""
-                      }`}
+                    className={`fa fa-star ${
+                      comic?.rating >= 1 ? "checked" : ""
+                    }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${comic?.rating >= 2 ? "checked" : ""
-                      }`}
+                    className={`fa fa-star ${
+                      comic?.rating >= 2 ? "checked" : ""
+                    }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${comic?.rating >= 3 ? "checked" : ""
-                      }`}
+                    className={`fa fa-star ${
+                      comic?.rating >= 3 ? "checked" : ""
+                    }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${comic?.rating >= 4 ? "checked" : ""
-                      }`}
+                    className={`fa fa-star ${
+                      comic?.rating >= 4 ? "checked" : ""
+                    }`}
                   ></span>
                   <span
-                    className={`fa fa-star ${comic?.rating >= 5 ? "checked" : ""
-                      }`}
+                    className={`fa fa-star ${
+                      comic?.rating >= 5 ? "checked" : ""
+                    }`}
                   ></span>
                   <span>
                     &nbsp;{comic?.rating}/5 ({comic?.reviewCount} đánh giá)
@@ -230,8 +259,9 @@ function StoryDetail() {
                 {nav.map((item, index) => {
                   return (
                     <a
-                      className={`navigate__tab fs-20 bold ${active === index ? "tab_active" : ""
-                        }`}
+                      className={`navigate__tab fs-20 bold ${
+                        active === index ? "tab_active" : ""
+                      }`}
                       key={index}
                       name={item.path}
                       onClick={onClickTab}

@@ -67,9 +67,9 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    public List<Comic> SearchByType(String theloai, Pageable pageable) {
-        log.info("Searching Novel by theloai: "+theloai);
-        return comicRepository.findAllByGenreContainsAllIgnoreCase(theloai, pageable);
+    public List<Comic> SearchByGenre(String genre, Pageable pageable) {
+        log.info("Searching Novel by theloai: "+ genre);
+        return comicRepository.findAllByGenreContainsAllIgnoreCase(genre, pageable);
     }
 
     @Override
@@ -106,6 +106,11 @@ public class ComicServiceImpl implements ComicService {
     @Override
     public List<Comic> getComicsByArtist(String artist) {
         return comicRepository.findByArtist(artist);
+    }
+
+    @Override
+    public List<Comic> SearchByNameAndGenre(String name, String genre, Pageable pageable) {
+        return comicRepository.findByNameContainingIgnoreCaseAndGenreContainingIgnoreCase(name, genre, pageable);
     }
 
 }

@@ -44,7 +44,7 @@ const apiMain = {
     const res = await axiosClient.get(`/novels/`, { params: params });
     return getData(res);
   },
-  getStorysByName: async (params) => {
+  getFilteredComics: async (params) => {
     const res = await axiosClient.get(`/novels/search`, { params: params });
     return getData(res);
   },
@@ -68,23 +68,29 @@ const apiMain = {
     });
     return getData(res);
   },
-  getChapterByNumber: async (tentruyen, chapnum, user, dispatch, stateSuccess) => {
+  getChapterByNumber: async (
+    tentruyen,
+    chapnum,
+    user,
+    dispatch,
+    stateSuccess
+  ) => {
     if (user) {
       let axi = axiosInstance(user, dispatch, stateSuccess);
       return getData(
         await axi.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
       );
     } else {
-      const res = await axiosClient.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
-      return getData(res)
+      const res = await axiosClient.get(
+        `/novels/novel/${tentruyen}/chuong/${chapnum}`
+      );
+      return getData(res);
     }
   },
   setReading: async (params, user, dispatch, stateSuccess) => {
     const url = `/novels/novel/reading`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
-    return (
-      await axi.post(url, params)
-    ).data;
+    return (await axi.post(url, params)).data;
   },
   createChapter: async (data, user, dispatch, stateSuccess) => {
     const url = `/novels/novel/chuong/create`;
@@ -150,9 +156,7 @@ const apiMain = {
   createComment: async (user, params, dispatch, stateSuccess) => {
     const url = `/comment`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
-    return getData(
-      await axi.post(url, params)
-    );
+    return getData(await axi.post(url, params));
   },
   getCommentsByUrl: async (params) => {
     const url = `/comment/${params.url}`;
@@ -161,9 +165,7 @@ const apiMain = {
   deleteComment: async (params, user, dispatch, stateSuccess) => {
     const url = `/comment/${params.id}`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
-    return getData(
-      await axi.delete(url)
-    );
+    return getData(await axi.delete(url));
   },
 
   ///user

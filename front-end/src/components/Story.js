@@ -9,7 +9,7 @@ function Story(props) {
             <img src={data.image} alt=""/>
         </div>
         <div className='story-card__content'>
-            <h2 className='story-card__tilte'><Link to={`truyen/${data.url}`}>{data['name']}</Link></h2>
+            <h2 className='story-card__tilte'><Link to={`/truyen/${data.url}`}>{data['name']}</Link></h2>
             <div className='story-card__description'>{data.description}</div>
             <div className='story-card__info'>
               <span className='story-card__author'>{data.artist}</span>
