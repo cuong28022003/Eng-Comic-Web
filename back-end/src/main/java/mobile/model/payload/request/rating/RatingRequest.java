@@ -9,7 +9,6 @@ import org.bson.types.ObjectId;
 @AllArgsConstructor
 @Data
 public class RatingRequest {
-    private ObjectId userId;
-    private ObjectId comicId;
+    private String url;
     private int rating;
 }

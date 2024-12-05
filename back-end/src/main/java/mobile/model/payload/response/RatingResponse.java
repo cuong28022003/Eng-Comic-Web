@@ -9,10 +9,6 @@ import org.bson.types.ObjectId;
 @AllArgsConstructor
 @Data
 public class RatingResponse {
-    private ObjectId id;
-    private ObjectId userId;
-    private String userName; // Tên người dùng (nếu cần hiển thị)
-    private ObjectId comicId;
-    private String comicTitle; // Tiêu đề truyện (nếu cần hiển thị)
-    private int rating;
+    double averageRating;
+    private int reviewCount;
 }
