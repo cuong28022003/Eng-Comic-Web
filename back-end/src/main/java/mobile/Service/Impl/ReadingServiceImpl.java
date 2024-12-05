@@ -35,12 +35,16 @@ public class ReadingServiceImpl implements ReadingService{
 
 	@Override
 	public List<Reading> getReadings(User user) {
-		List<Reading> list = readingRepository.findByUserId(user.getId());
-		return list;
+		return readingRepository.findByUserId(user.getId());
 	}
 
 	@Override
 	public void deleteAllReadingByNovel(Comic comic) {
 		readingRepository.deleteAllByNovel(comic);
+	}
+
+	@Override
+	public Optional<Reading> getReading(User user, Comic comic) {
+		return readingRepository.findWithParam(user.getId(), comic.getId());
 	}
 }

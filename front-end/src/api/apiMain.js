@@ -92,6 +92,11 @@ const apiMain = {
     let axi = axiosInstance(user, dispatch, stateSuccess);
     return (await axi.post(url, params)).data;
   },
+  getReading: async (params, user, dispatch, stateSuccess) => { 
+    const url = '/novels/reading';
+    let axi = axiosInstance(user, dispatch, stateSuccess);
+    return (await axi.get(url, { params: params })).data;
+  },
   createChapter: async (data, user, dispatch, stateSuccess) => {
     const url = `/novels/novel/chuong/create`;
     let axi = axiosInstance(user, dispatch, stateSuccess);

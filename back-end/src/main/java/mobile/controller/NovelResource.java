@@ -339,6 +339,51 @@ public class NovelResource {
 
     }
 
+    @GetMapping("/reading") // API lấy thông tin đọc của người dùng theo URL
+    @ResponseBody
+    public ResponseEntity<ReadingResponse> getReadingByUrl(
+            @RequestParam("url") String url,
+            HttpServletRequest request) {
+        // Lấy thông tin Access Token từ Header
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            // Kiểm tra xem token có hết hạn không
+            if (jwtUtils.validateExpiredToken(accessToken)) {
+                throw new BadCredentialsException("Access token đã hết hạn");
+            }
+
+            // Lấy thông tin người dùng từ token
+            String username = jwtUtils.getUserNameFromJwtToken(accessToken);
+            User user = userService.findByUsername(username);
+            if (user == null) {
+                throw new RecordNotFoundException("Không tìm thấy người dùng");
+            }
+
+            Comic comic = comicService.findByUrl(url);
+            if (comic == null) {
+                throw new RecordNotFoundException("Không tìm thấy truyện");
+            }
+
+            // Tìm Reading dựa trên User và URL
+            Reading reading = readingService.getReading(user, comic)
+                    .orElseThrow(() -> new RecordNotFoundException("Không tìm thấy thông tin đọc cho URL được cung cấp"));
+
+            // Tính số chương của truyện
+            int sochap = chapterService.countByDauTruyen(reading.getNovel().getId());
+
+            // Chuyển đổi entity sang response DTO
+            ReadingResponse readingResponse = ReadingMapping.EntityToResponese(reading, sochap);
+
+            // Trả về kết quả
+            return new ResponseEntity<>(readingResponse, HttpStatus.OK);
+        } else {
+            throw new BadCredentialsException("Không tìm thấy Access Token");
+        }
+    }
+
+
     @PostMapping("novel/create") //Tạo đầu truyện
     @ResponseBody
     public ResponseEntity<SuccessResponse> createNovel(@RequestBody CreateNovelRequest createNovelRequest, HttpServletRequest request){

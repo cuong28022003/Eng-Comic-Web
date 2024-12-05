@@ -149,13 +149,33 @@ function StoryDetail() {
     }
   };
 
-  const onClickArtist = async (artist) => {;
+  const onClickArtist = async (artist) => {
     navigate("/tim-kiem", { state: { artist: artist } });
   };
 
   const onClickGenre = async (genre) => {
     console.log("genre: " + genre);
     navigate("/tim-kiem", { state: { genre: genre } });
+  };
+
+  const onClickReading = async () => {
+    try {
+      if (!user) {
+        navigate(`/truyen/${url}/1`);
+      } else {
+        const response = await apiMain.getReading(
+          { url: url },
+          user,
+          dispatch,
+          loginSuccess
+        );
+        console.log(response);
+        const reading = response
+        navigate(`/truyen/${url}/${reading.chapnumber}`);
+      }
+    } catch (error) {
+      console.log("Error: " + error);
+    }
   };
 
   //style
@@ -242,7 +262,9 @@ function StoryDetail() {
                   </span>
                 </div>
                 <div className="">
-                  <button className="btn-primary mr-1">Đọc truyện</button>
+                  <button className="btn-primary mr-1" onClick={onClickReading}>
+                    Đọc truyện
+                  </button>
                   <button
                     className={`btn-outline mr-1 ${isSaved ? "saved" : ""}`}
                     onClick={isSaved ? handleUnsaveComic : handleSaveComic}
