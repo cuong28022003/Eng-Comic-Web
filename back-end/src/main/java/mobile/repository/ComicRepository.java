@@ -23,6 +23,8 @@ public interface ComicRepository extends MongoRepository<Comic, ObjectId> {
     List<Comic> findByNameLike(String name);
     List<Comic> findByGenre(String genre);
     List<Comic> findByArtist(String artist);
+    List<Comic> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    List<Comic> findByNameContainingIgnoreCaseAndGenreContainingIgnoreCase(String name, String genre, Pageable pageable);
 
     @Query("{'uploader.$id':?0}")
     List<Comic> findWithUserId(ObjectId id, Pageable pageable);

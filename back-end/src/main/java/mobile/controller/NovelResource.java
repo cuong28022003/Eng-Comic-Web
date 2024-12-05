@@ -84,8 +84,8 @@ public class NovelResource {
             @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         List<Comic> comicList = null;
-        // List<NovelResponse> novelResponseList=new ArrayList<>();
-        comicList = comicService.SearchByType(theloai, pageable);
+        //List<NovelResponse> novelResponseList=new ArrayList<>();
+        comicList = comicService.SearchByGenre(theloai, pageable);
 
         if (comicList == null) {
             throw new RecordNotFoundException("Không tìm thấy truyện");
@@ -125,22 +125,35 @@ public class NovelResource {
      */
     @GetMapping("/search")
     @ResponseBody
-    public ResponseEntity<List<Comic>> searchNovelByTenTruyenLike(@RequestParam(defaultValue = "") String genre,
-            @RequestParam(defaultValue = "") String name, @RequestParam(defaultValue = "name") String sort,
-            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        List<Comic> comicList = null;
-        if (genre.equals("")) {
+    public ResponseEntity<List<Comic>> searchNovelByFilters(
+            @RequestParam(defaultValue = "") String artist,
+            @RequestParam(defaultValue = "") String genre,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "name") String sort,
+            @RequestParam(defaultValue = "desc") String order,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        // Thiết lập thứ tự sắp xếp (ASC/DESC)
+        Sort.Direction direction = "asc".equalsIgnoreCase(order) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
+
+        List<Comic> comicList;
+
+        // Kiểm tra nếu không có thể loại thì chỉ lọc theo tên
+        if (!name.isEmpty()) {
             comicList = comicService.SearchByName(name, pageable);
+        } else if (!genre.isEmpty()) {
+            comicList = comicService.SearchByGenre(genre, pageable);
         } else {
-            comicList = comicService.findByNameLike(name);
+            comicList = comicService.SearchByArtist(artist, pageable);
         }
 
-        if (comicList == null) {
-            throw new RecordNotFoundException("Không tìm thấy truyện");
+        if (comicList == null || comicList.isEmpty()) {
+            throw new RecordNotFoundException("Không tìm thấy truyện phù hợp với tiêu chí.");
         }
-        return new ResponseEntity<List<Comic>>(comicList, HttpStatus.OK);
 
+        return new ResponseEntity<>(comicList, HttpStatus.OK);
     }
 
     @GetMapping("/novel/{url}")
@@ -336,7 +349,52 @@ public class NovelResource {
 
     }
 
-    @PostMapping("novel/create") // Tạo đầu truyện
+    @GetMapping("/reading") // API lấy thông tin đọc của người dùng theo URL
+    @ResponseBody
+    public ResponseEntity<ReadingResponse> getReadingByUrl(
+            @RequestParam("url") String url,
+            HttpServletRequest request) {
+        // Lấy thông tin Access Token từ Header
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            // Kiểm tra xem token có hết hạn không
+            if (jwtUtils.validateExpiredToken(accessToken)) {
+                throw new BadCredentialsException("Access token đã hết hạn");
+            }
+
+            // Lấy thông tin người dùng từ token
+            String username = jwtUtils.getUserNameFromJwtToken(accessToken);
+            User user = userService.findByUsername(username);
+            if (user == null) {
+                throw new RecordNotFoundException("Không tìm thấy người dùng");
+            }
+
+            Comic comic = comicService.findByUrl(url);
+            if (comic == null) {
+                throw new RecordNotFoundException("Không tìm thấy truyện");
+            }
+
+            // Tìm Reading dựa trên User và URL
+            Reading reading = readingService.getReading(user, comic)
+                    .orElseThrow(() -> new RecordNotFoundException("Không tìm thấy thông tin đọc cho URL được cung cấp"));
+
+            // Tính số chương của truyện
+            int sochap = chapterService.countByDauTruyen(reading.getNovel().getId());
+
+            // Chuyển đổi entity sang response DTO
+            ReadingResponse readingResponse = ReadingMapping.EntityToResponese(reading, sochap);
+
+            // Trả về kết quả
+            return new ResponseEntity<>(readingResponse, HttpStatus.OK);
+        } else {
+            throw new BadCredentialsException("Không tìm thấy Access Token");
+        }
+    }
+
+
+    @PostMapping("novel/create") //Tạo đầu truyện
     @ResponseBody
     public ResponseEntity<SuccessResponse> createNovel(@RequestBody CreateNovelRequest createNovelRequest,
             HttpServletRequest request) {
@@ -627,17 +685,5 @@ public class NovelResource {
         } else {
             throw new BadCredentialsException("Không tìm thấy access token");
         }
-    }
-
-    // API lấy truyện theo thể loại
-    @GetMapping("/genre/{genre}")
-    public List<Comic> getComicsByGenre(@PathVariable String genre) {
-        return comicService.getComicsByGenre(genre);
-    }
-
-    // API lấy truyện theo tác giả
-    @GetMapping("/artist/{artist}")
-    public List<Comic> getComicsByArtist(@PathVariable String artist) {
-        return comicService.getComicsByArtist(artist);
     }
 }
