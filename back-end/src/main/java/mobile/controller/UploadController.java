@@ -54,7 +54,7 @@ public class UploadController {
             // Tạo đối tượng Chapter và lưu vào MongoDB
             Chapter chapter = new Chapter();
             chapter.setChapnumber(chapnumber);
-            chapter.setContent(content);
+//            chapter.setContent(content);
             chapter.setDautruyenId(comic);
             chapter.setTenchap(tenchap);
             chapter.setDanhSachAnh(imageUrls);
