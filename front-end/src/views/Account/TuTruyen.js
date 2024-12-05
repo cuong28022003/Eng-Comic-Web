@@ -385,128 +385,118 @@ const AddChapter = ({
   url,
   chapnumber,
   user,
-  dispatch,
   onClickBackFromAddChap,
   getChapters,
 }) => {
-  const [content, setContent] = useState("");
   const [tenchuong, setTenchuong] = useState("");
+  const [selectedImages, setSelectedImages] = useState([]);
   const [edit, setEdit] = useState(false);
-  const onChangeTenchuong = (e) => {
-    setTenchuong(e.target.value);
+  const dispatch = useDispatch();
+
+  // Hàm xử lý chọn ảnh
+  const handleFileChange = (e) => {
+    setSelectedImages([...e.target.files]);
   };
 
-  useEffect(async () => {
-    console.log(url);
+  // Load dữ liệu khi sửa chương
+  useEffect(() => {
     if (chapnumber) {
       apiMain.getChapterByNumber(url, chapnumber).then((res) => {
-        console.log(res);
-        setContent(res.content);
         setTenchuong(res.tenchap);
+        setSelectedImages([]); // Xóa danh sách ảnh cũ, chỉ hiển thị ảnh đã tải lên từ API
         setEdit(true);
       });
     }
-  }, []);
+  }, [chapnumber, url]);
 
-  const onClickAddChapter = async (e) => {
-    const data = { content, tenchap: tenchuong, url };
-    if (content.length <= 10) {
-      toast.warning("Nội dung chương phải dài hơn 10 kí tự");
+  // Hàm thêm chương
+  const onClickAddChapter = async () => {
+    if (!tenchuong) {
+      toast.warning("Tên chương không được để trống.");
       return;
     }
-    apiMain
-      .createChapter(data, user, dispatch, loginSuccess)
-      .then((res) => {
-        getChapters();
-        toast.success("Thêm chương thành công");
-      })
-      .catch((err) => {
-        toast.error(getData(err.response)?.details.message, {
-          hideProgressBar: true,
-          autoClose: 1000,
-          pauseOnHover: false,
-        });
-      });
-  };
 
-  const onClickEditChapter = async (e) => {
-    const data = { content, tenchap: tenchuong, url, chapnumber };
-    if (content.length <= 10) {
-      toast.warning("Nội dung chương phải dài hơn 10 kí tự");
+    if (selectedImages.length === 0) {
+      toast.warning("Vui lòng chọn ít nhất một ảnh.");
       return;
     }
-    apiMain
-      .updateChapter(data, user, dispatch, loginSuccess)
-      .then((res) => {
-        getChapters();
-        toast.success("Sửa truyện thành công");
-      })
-      .catch((err) => {
-        toast.error(getData(err.response)?.details.message, {
-          hideProgressBar: true,
-          autoClose: 1000,
-          pauseOnHover: false,
-        });
-      });
+
+    try {
+      dispatch(setLoading(true));
+
+      // Chuẩn bị dữ liệu để gửi API
+      const formData = new FormData();
+      for (const image of selectedImages) {
+        formData.append("files", image);
+      }
+      formData.append("tenchap", tenchuong);
+      formData.append("url", url);
+
+      // Gửi dữ liệu tới API
+      if (edit) {
+        await apiMain.updateChapter(chapnumber, formData, user);
+        toast.success("Cập nhật chương thành công.");
+      } else {
+        await apiMain.createChapter(formData, user);
+        toast.success("Thêm chương thành công.");
+      }
+
+      // Làm mới danh sách chương và quay lại
+      getChapters();
+      onClickBackFromAddChap();
+    } catch (err) {
+      console.error(err);
+      toast.error("Lỗi khi thêm/cập nhật chương, vui lòng thử lại.");
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
-  const labelStyle = {
-    minWidth: "100px",
-    margin: "5px 0px",
-    display: "inline-block",
-  };
+
   return (
-    <>
-      <div>
+    <div>
+      <div className="d-flex" style={{ justifyContent: "space-between" }}>
         <a onClick={onClickBackFromAddChap}>
           <i className="fa-solid fa-angle-left"></i> Danh sách chương
         </a>
+        <span className="fs-20 fw-6">{edit ? "Chỉnh sửa chương" : "Thêm chương"}</span>
       </div>
-      <div className="group-info" style={{ marginBottom: "10px" }}>
-        <label htmlFor="" className="fs-16" style={labelStyle}>
-          Tên chương
-        </label>
-        <input onChange={onChangeTenchuong} value={tenchuong || ""} />
-      </div>
-      <label htmlFor="" className="fs-16" style={labelStyle}>
-        Nội dung chương
-      </label>
-      <CKEditor
-        editor={ClassicEditor}
-        data={content || ""}
-        onReady={(editor) => {
-          // You can store the "editor" and use when it is needed.
-          console.log("Editor is ready to use!", editor);
-        }}
-        onChange={(event, editor) => {
-          setContent(editor.getData());
-        }}
-        onBlur={(event, editor) => {
-          console.log("Blur.", editor);
-        }}
-        onFocus={(event, editor) => {
-          console.log("Focus.", editor);
-        }}
-      />
-      <div className="d-flex">
-        {edit ? (
-          <button
-            className="btn-primary"
-            onClick={onClickEditChapter}
-            style={{ margin: "20px auto" }}
-          >
-            Cập nhật chương
-          </button>
-        ) : (
-          <button
-            className="btn-primary"
-            onClick={onClickAddChapter}
-            style={{ margin: "20px auto" }}
-          >
-            Thêm chương
-          </button>
+
+      <div>
+        <label>Tên chương:</label>
+        <input
+          type="text"
+          value={tenchuong}
+          onChange={(e) => setTenchuong(e.target.value)}
+          placeholder="Nhập tên chương"
+        />
+
+        <label>Ảnh chương:</label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileChange}
+        />
+
+        {selectedImages.length > 0 && (
+          <div>
+            <h4>Ảnh đã chọn:</h4>
+            {Array.from(selectedImages).map((file, index) => (
+              <img
+                key={index}
+                src={URL.createObjectURL(file)}
+                alt={`Preview ${index + 1}`}
+                style={{ width: "100px", margin: "5px" }}
+              />
+            ))}
+          </div>
         )}
+
+        <button onClick={onClickAddChapter} className="btn-primary">
+          {edit ? "Cập nhật chương" : "Thêm chương"}
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 
