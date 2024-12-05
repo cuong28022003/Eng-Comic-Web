@@ -6,7 +6,7 @@ import {store,persistor} from './redux/store'
 import {Provider} from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import UploadChuong from './components/UploadChuong'
+import UploadChuong from './components/UploadChapter'
 import DocChuong from './components/DocChuong';
 ReactDOM.render(
   <Provider store={store}>
