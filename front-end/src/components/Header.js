@@ -109,9 +109,9 @@ export default function Header() {
     }
 
     const onClickSearch = () => {//xử lý tìm kiếm 
-        dispatch(setQuery(search))
+        // dispatch(setQuery(search))
         if (navigate.pathname != '/tim-kiem') {
-            navigate('/tim-kiem')
+            navigate('/tim-kiem', {state: {name: search}})
         }
 
     }

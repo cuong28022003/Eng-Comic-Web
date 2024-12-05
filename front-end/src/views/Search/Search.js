@@ -10,19 +10,21 @@ function Search(props) {
   const [filter, setFilter] = useState(""); // Lưu trạng thái bộ lọc
   const location = useLocation();
   const query = useSelector((state) => state?.message?.query || "");
+  const name = location.state?.name || "";
   const artist = location.state?.artist || "";
   const genre = location.state?.genre || "";
+  console.log("name: " + name);
   console.log("genre: " + genre);
-  console.log("query: " + query);
+  console.log("artist: " + artist);
   useEffect(() => {
     const fetchStories = async () => {
-      if (!query && !artist && !genre) {
+      if (!name && !artist && !genre) {
         setDatas([]);
         return;
       }
       try {
         const response = await apiMain.getFilteredComics({
-          name: query,
+          name: name,
           artist: artist,
           genre: genre,
           filter,
@@ -35,7 +37,7 @@ function Search(props) {
       }
     };
     fetchStories();
-  }, [query, filter]);
+  }, [name, filter]);
 
   return (
     <>
