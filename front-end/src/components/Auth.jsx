@@ -276,7 +276,7 @@ const Register = props => {
     let username = e.target.value
     setUsernameRegister(e.target.value)
     if (username.length > 5) {
-      apiMain.checkUsername({ username })
+      apiMain.checkUsername({username})
         .then(res => {
           let newValid = [...valid]
           if (res.valid) {
@@ -303,48 +303,52 @@ const Register = props => {
     }
   }
 
-  const onChangePassword = (e) => {//validate password
-    let password = e.target.value
-    setPasswordRegister(e.target.value)
-    let newValid = [...valid]
+  const onChangePassword = (e) => {
+    const password = e.target.value;
+    setPasswordRegister(password); // Cập nhật mật khẩu mới
+    let newValid = [...valid]; // Sao chép trạng thái hợp lệ
+
+    // Kiểm tra độ dài mật khẩu
     if (password.length > 8) {
-      setMsgPassword("Mật khẩu hợp lệ")
-      newValid[2] = true
-      if (password === passwordCfRegister) {
-        newValid[3] = true
-        setMsgCfPassword("Mật khẩu xác nhận trùng khớp")
-      } else {
-        newValid[3] = false
-        setMsgCfPassword("Mật khẩu xác nhận trùng khớp")
-      }
+      newValid[2] = true;
+      setMsgPassword("Mật khẩu hợp lệ");
     } else {
-      setMsgPassword("Mật khẩu không hợp lệ")
-      newValid[2] = false
-      if (password === passwordCfRegister) {
-        newValid[3] = true
-        setMsgCfPassword("Mật khẩu xác nhận trùng khớp")
-      } else {
-        newValid[3] = false
-        setMsgCfPassword("Mật khẩu xác nhận trùng khớp")
-      }
+      newValid[2] = false;
+      setMsgPassword("Mật khẩu phải có ít nhất 9 ký tự");
     }
-    setValid(newValid)
-  }
 
-  const onChangePasswordCf = (e) => {//validate password confirm
-    let password = e.target.value
-    setPasswordCfRegister(e.target.value)
-    let newValid = [...valid]
+    // Kiểm tra sự khớp của mật khẩu xác nhận
     if (password === passwordCfRegister) {
-      newValid[3] = true
-      setMsgCfPassword("Mật khẩu xác nhận trùng khớp")
+      newValid[3] = true;
+      setMsgCfPassword("Mật khẩu xác nhận trùng khớp");
     } else {
-      newValid[3] = false
-      setMsgCfPassword("Mật khẩu xác nhận trùng khớp")
+      newValid[3] = false;
+      setMsgCfPassword("Mật khẩu xác nhận không trùng khớp");
     }
 
-    setValid(newValid)
-  }
+    // Cập nhật trạng thái hợp lệ
+    setValid(newValid);
+  };
+
+
+  const onChangePasswordCf = (e) => {
+    const passwordConfirm = e.target.value;
+    setPasswordCfRegister(passwordConfirm); // Cập nhật giá trị mật khẩu xác nhận
+
+    let newValid = [...valid]; // Sao chép trạng thái hợp lệ hiện tại
+
+    // Kiểm tra sự khớp giữa mật khẩu và mật khẩu xác nhận
+    if (passwordConfirm === passwordRegister) {
+      newValid[3] = true;
+      setMsgCfPassword("Mật khẩu xác nhận trùng khớp");
+    } else {
+      newValid[3] = false;
+      setMsgCfPassword("Mật khẩu xác nhận không trùng khớp");
+    }
+
+    setValid(newValid); // Cập nhật trạng thái hợp lệ
+  };
+
 
   return (
     <div className="form-wrap">

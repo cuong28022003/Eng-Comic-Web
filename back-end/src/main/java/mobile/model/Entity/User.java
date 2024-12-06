@@ -58,7 +58,7 @@ public class User {
         this.birthdate = new Date();
         this.createdate = new Date();
         this.image ="";
-        this.active = false;
+        this.active = true; // skip send active email
         this.status="None";
     }
 

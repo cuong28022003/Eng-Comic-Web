@@ -83,7 +83,7 @@ public class AuthentiactionController {
             String roleName = "USER";
             userService.saveUser(newUser,roleName);
 
-            emailService.sendActiveMessage(newUser);
+//            emailService.sendActiveMessage(newUser); // skip send active email
 
             SuccessResponse response = new SuccessResponse();
             response.setStatus(HttpStatus.OK.value());
@@ -337,13 +337,13 @@ public class AuthentiactionController {
 
             SuccessResponse response = new SuccessResponse();
             response.setStatus(HttpStatus.OK.value());
-            response.setMessage("check email successful");
+            response.setMessage("check username successful");
             response.setSuccess(true);
             response.getData().put("valid",!exist);
 
             return new ResponseEntity<SuccessResponse>(response,HttpStatus.OK);
         }catch (Exception ex){
-            throw new Exception("Some error when check email");
+            throw new Exception("Some error when check user");
         }
     }
 

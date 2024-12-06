@@ -377,10 +377,15 @@ public class NovelResource {
                 throw new RecordNotFoundException("Không tìm thấy truyện");
             }
 
-            // Tìm Reading dựa trên User và URL
-            Reading reading = readingService.getReading(user, comic)
-                    .orElseThrow(() -> new RecordNotFoundException("Không tìm thấy thông tin đọc cho URL được cung cấp"));
-
+            // Tìm hoặc tạo mới Reading
+            Reading reading = readingService.getReading(user, comic).orElseGet(() -> {
+                Reading newReading = new Reading();
+                newReading.setUser(user);
+                newReading.setNovel(comic);
+                newReading.setChapnumber(1); // Giá trị mặc định
+                readingService.save(newReading);
+                return newReading;
+            });
             // Tính số chương của truyện
             int sochap = chapterService.countByDauTruyen(reading.getNovel().getId());
 

@@ -30,11 +30,11 @@ const apiMain = {
     ).data;
   },
   checkUsername: async (params) => {
-    const res = await axiosClient.post("/auth/checkusername", params);
+    const res = await axiosClient.get("/auth/checkusername", { params: params });
     return getData(res);
   },
   checkEmail: async (params) => {
-    const res = await axiosClient.post("/auth/checkemail", params);
+    const res = await axiosClient.get("/auth/checkemail", { params: params });
     return getData(res);
   },
 

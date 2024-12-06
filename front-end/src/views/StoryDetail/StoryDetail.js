@@ -207,7 +207,7 @@ function StoryDetail() {
                   >
                     {comic?.artist}
                   </li>
-                  <li className={liClass}>{comic?.status}</li>
+                  {/* <li className={liClass}>{comic?.status}</li> */}
                   <li
                     className={liClass}
                     onClick={() => onClickGenre(comic?.genre)}

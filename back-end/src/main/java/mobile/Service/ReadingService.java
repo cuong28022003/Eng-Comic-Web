@@ -14,5 +14,5 @@ public interface ReadingService {
    List<Reading> getReadings(User user);
    void deleteAllReadingByNovel(Comic comic);
    Optional<Reading> getReading(User user, Comic comic);
-
+   Reading save(Reading reading);
 }
