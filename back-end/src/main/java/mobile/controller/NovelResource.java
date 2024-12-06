@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.mongodb.DBRef;
+
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 
 import java.io.IOException;
@@ -85,7 +87,7 @@ public class NovelResource {
             @RequestParam(defaultValue = "3") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         List<Comic> comicList = null;
-        //List<NovelResponse> novelResponseList=new ArrayList<>();
+        // List<NovelResponse> novelResponseList=new ArrayList<>();
         comicList = comicService.SearchByGenre(theloai, pageable);
 
         if (comicList == null) {
@@ -126,35 +128,22 @@ public class NovelResource {
      */
     @GetMapping("/search")
     @ResponseBody
-    public ResponseEntity<List<Comic>> searchNovelByFilters(
-            @RequestParam(defaultValue = "") String artist,
-            @RequestParam(defaultValue = "") String genre,
-            @RequestParam(defaultValue = "") String name,
-            @RequestParam(defaultValue = "name") String sort,
-            @RequestParam(defaultValue = "desc") String order,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size
-    ) {
-        // Thiết lập thứ tự sắp xếp (ASC/DESC)
-        Sort.Direction direction = "asc".equalsIgnoreCase(order) ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
-
-        List<Comic> comicList;
-
-        // Kiểm tra nếu không có thể loại thì chỉ lọc theo tên
-        if (!name.isEmpty()) {
+    public ResponseEntity<List<Comic>> searchNovelByTenTruyenLike(@RequestParam(defaultValue = "") String genre,
+            @RequestParam(defaultValue = "") String name, @RequestParam(defaultValue = "name") String sort,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        List<Comic> comicList = null;
+        if (genre.equals("")) {
             comicList = comicService.SearchByName(name, pageable);
-        } else if (!genre.isEmpty()) {
-            comicList = comicService.SearchByGenre(genre, pageable);
         } else {
-            comicList = comicService.SearchByArtist(artist, pageable);
+            comicList = comicService.findByNameLike(name);
         }
 
-        if (comicList == null || comicList.isEmpty()) {
-            throw new RecordNotFoundException("Không tìm thấy truyện phù hợp với tiêu chí.");
+        if (comicList == null) {
+            throw new RecordNotFoundException("Không tìm thấy truyện");
         }
+        return new ResponseEntity<List<Comic>>(comicList, HttpStatus.OK);
 
-        return new ResponseEntity<>(comicList, HttpStatus.OK);
     }
 
     @GetMapping("/novel/{url}")
@@ -224,28 +213,49 @@ public class NovelResource {
 
     @GetMapping("/novel/{url}/chuong/{chapterNumber}")
     @ResponseBody
-    public ResponseEntity<Chapter> getChapter(@PathVariable String url, @PathVariable int chapterNumber,
+    public ResponseEntity<?> getChapter(
+            @PathVariable String url,
+            @PathVariable int chapterNumber,
             HttpServletRequest request) {
+        // Tìm kiếm truyện theo URL
         Comic comic = comicService.findByUrl(url);
-        Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(comic.getId(), chapterNumber);
-        if (chapter == null) {
-            throw new RecordNotFoundException("Không có chương được yêu cầu");
+        if (comic == null) {
+            throw new RecordNotFoundException("Không tìm thấy truyện với URL: " + url);
         }
 
+        // Tìm chapter theo số chương và đầu truyện
+        Chapter chapter = chapterService.findByDauTruyenAndChapterNumber(comic.getId(), chapterNumber);
+        if (chapter == null) {
+            throw new RecordNotFoundException("Không tìm thấy chương " + chapterNumber);
+        }
+
+        // Kiểm tra access token trong header
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String accessToken = authorizationHeader.substring("Bearer ".length());
 
-            if (jwtUtils.validateExpiredToken(accessToken) != true) {
+            // Xác thực token và cập nhật trạng thái đọc
+            if (!jwtUtils.validateExpiredToken(accessToken)) {
                 String username = jwtUtils.getUserNameFromJwtToken(accessToken);
                 User user = userService.findByUsername(username);
-
-                Reading reading = new Reading(user, chapterNumber, comic);
-                readingService.upsertReading(reading);
+                if (user != null) {
+                    readingService.upsertReading(new Reading(user, chapterNumber, comic));
+                }
             }
         }
 
-        return new ResponseEntity<Chapter>(chapter, HttpStatus.OK);
+        // Phản hồi trực tiếp dữ liệu Chapter
+        Map<String, Object> response = new HashMap<>();
+        response.put("_id", chapter.getId());
+        response.put("chapnumber", chapter.getChapnumber());
+        response.put("dautruyenId", new DBRef("novels", comic.getId())); // Giả lập DBRef
+        response.put("tenchap", chapter.getTenchap());
+        response.put("danhSachAnh", chapter.getDanhSachAnh()); // Danh sách ảnh
+        response.put("createAt", chapter.getCreateAt());
+        response.put("updateAt", chapter.getUpdateAt());
+        response.put("_class", chapter.getClass().getName());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/tacgia/{tacgia}")
@@ -634,7 +644,7 @@ public class NovelResource {
             if (comic.getUploader().getUsername().equals(user.getUsername())) {
                 String tenchap = updateChapterRequest.getTenchap();
                 chapter.setTenchap(tenchap);
-//                chapter.setContent(updateChapterRequest.getContent());
+                chapter.setContent(updateChapterRequest.getContent());
                 chapterService.SaveChapter(chapter);
             } else {
                 throw new BadCredentialsException("Không thể chỉnh sửa truyện của người khác");
