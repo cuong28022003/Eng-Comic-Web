@@ -1,77 +1,28 @@
-.chapter-manual {
-    width: 70px;
-    position: fixed;
-    top: 102px;
-    right: 40px;
-    // margin: initial;
-    background-color: #e1e8e8;
-    border-radius: 4px;
-    box-shadow: 0 6px 6px 0 rgba($color: #000000, $alpha: .2);
-    &__item {
-        z-index: 10;
-        position: relative;
-        >a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-            position: relative;
-            i {
-                z-index: 10;
-            }
-        }
-        &.active {
-            a {
-                z-index: 10;
-            }
-            a::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                right: 0px;
-                height: 100%;
-                width: 100px;
-                background-color: white;
-            }
-            background-color: white;
-            &>.chapter-manual__popup {
-                display: block;
-            }
-        }
-    }
-    &__item .chapter-manual__popup {
-        display: none;
-        position: absolute;
-        top: 0;
-        right: 80px;
-        padding: 10px;
-        background-color: white;
-        z-index: 2;
-        min-width: 500px;
-        box-shadow: 0 10px 10px 0px rgba($color: #000000, $alpha: .2);
-    }
-}
-
-.chapter-setting {
-    table {
-        width: 100%;
-        padding: 20px;
-        tr {
-            margin-bottom: 15px;
-        }
-    }
-    &__label {
-        width: 100%;
-        display: inline-flex;
-        gap: 10px;
-        align-items: baseline;
-    }
-    &__input {
-        width: 100%;
-        justify-content: space-between;
-        padding: 6px 10px;
-        button {
-            border: none;
-        }
-    }
-}
+.chapter-reader {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa nội dung */
+    padding: 20px;
+  }
+  
+  .image-list {
+    display: flex;
+    flex-direction: column; /* Sắp xếp các ảnh theo chiều dọc */
+    gap: 20px; /* Khoảng cách giữa các ảnh */
+    width: calc(100% - 100px); /* Chiều rộng container cách hai bên 50dp (100px tổng) */
+    max-width: 800px; /* Đặt giới hạn chiều rộng tối đa */
+    margin: 0 auto; /* Căn giữa container */
+    padding: 10px; /* Thêm khoảng cách bên trong */
+    background: #f9f9f9; /* Màu nền nhạt cho container */
+    border: 1px solid #ddd; /* Đường viền nhẹ */
+    border-radius: 8px; /* Bo góc cho container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng bóng */
+  }
+  
+  .chapter-image {
+    max-width: 100%; /* Đảm bảo ảnh không vượt quá chiều rộng container */
+    height: auto; /* Giữ tỷ lệ ảnh */
+    border-radius: 5px; /* Bo góc ảnh */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng bóng nhẹ cho ảnh */
+  }
+  

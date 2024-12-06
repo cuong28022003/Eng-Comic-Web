@@ -62,6 +62,15 @@ const apiMain = {
     });
     return getData(res);
   },
+  getChapter: async (url, chapterNumber) => {
+    try {
+      const res = await axiosClient.get(`/novels/novel/${url}/chuong/${chapterNumber}`);
+      return res.data;
+    } catch (error) {
+      console.error("Error fetching chapter:", error);
+      throw error; // Ném lỗi ra để xử lý ở nơi gọi hàm
+    }
+  },
   getNameChapters: async (url, params) => {
     const res = await axiosClient.get(`/novels/novel/${url}/mucluc`, {
       params: params,
@@ -75,18 +84,25 @@ const apiMain = {
     dispatch,
     stateSuccess
   ) => {
-    if (user) {
-      let axi = axiosInstance(user, dispatch, stateSuccess);
-      return getData(
-        await axi.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`)
-      );
-    } else {
-      const res = await axiosClient.get(
-        `/novels/novel/${tentruyen}/chuong/${chapnum}`
-      );
-      return getData(res);
-    }
+      try {
+          // Sử dụng axiosInstance nếu user đã đăng nhập
+          if (user) {
+              let axi = axiosInstance(user, dispatch, stateSuccess);
+              const response = await axi.get(`/novels/novel/${tentruyen}/chuong/${chapnum}`);
+              return getData(response);
+          } else {
+              // Sử dụng axiosClient nếu user chưa đăng nhập
+              const response = await axiosClient.get(
+                  `/novels/novel/${tentruyen}/chuong/${chapnum}`
+              );
+              return getData(response);
+          }
+      } catch (error) {
+          console.error("Error fetching chapter:", error);
+          return { error: "Unable to fetch chapter data" }; // Xử lý lỗi
+      }
   },
+
   setReading: async (params, user, dispatch, stateSuccess) => {
     const url = `/novels/novel/reading`;
     let axi = axiosInstance(user, dispatch, stateSuccess);
