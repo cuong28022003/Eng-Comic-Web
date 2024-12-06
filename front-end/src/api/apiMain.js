@@ -68,6 +68,10 @@ const apiMain = {
     });
     return getData(res);
   },
+  incrementViews: async (url) => {
+    const res = await axiosClient.patch(`/novels/increment-views/${url}`);
+    return getData(res);
+  },
   getChapterByNumber: async (
     tentruyen,
     chapnum,
@@ -92,8 +96,8 @@ const apiMain = {
     let axi = axiosInstance(user, dispatch, stateSuccess);
     return (await axi.post(url, params)).data;
   },
-  getReading: async (params, user, dispatch, stateSuccess) => { 
-    const url = '/novels/reading';
+  getReading: async (params, user, dispatch, stateSuccess) => {
+    const url = "/novels/reading";
     let axi = axiosInstance(user, dispatch, stateSuccess);
     return (await axi.get(url, { params: params })).data;
   },

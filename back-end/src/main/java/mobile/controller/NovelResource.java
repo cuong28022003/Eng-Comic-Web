@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("api/novels")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000") // Cho phép React truy cập
 public class NovelResource {
     private static final Logger LOGGER = LogManager.getLogger(NovelResource.class);
 
@@ -684,6 +685,16 @@ public class NovelResource {
             return new ResponseEntity<SuccessResponse>(response, HttpStatus.OK);
         } else {
             throw new BadCredentialsException("Không tìm thấy access token");
+        }
+    }
+
+    @PatchMapping("/increment-views/{url}")
+    public ResponseEntity<Comic> incrementViews(@PathVariable String url) {
+        try {
+            Comic updatedComic = comicService.incrementViews(url);
+            return ResponseEntity.ok(updatedComic);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
         }
     }
 }

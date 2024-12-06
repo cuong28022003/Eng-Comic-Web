@@ -25,4 +25,6 @@ public interface ComicService {
     List<Comic> findByNameLike(String name);
     List<Comic> getComicsByGenre(String genre);
     List<Comic> getComicsByArtist(String artist);
+
+    Comic incrementViews(String url);
 }
