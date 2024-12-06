@@ -511,12 +511,16 @@ function EditNovel({ url, user, dispatch, onClickBackFromEditNovel }) {
   const loading = useSelector((state) => state.message.loading);
   const [loadingStory, setLoadingStory] = useState(true);
   const types = [
-    "Tiên hiệp",
-    "Dã sử",
-    "Kì ảo",
-    "Kiếm hiệp",
-    "Huyền huyễn",
-    "Khoa huyễn",
+    "Hành động",
+    "Phiêu lưu",
+    "Hài hước",
+    "Siêu nhiên",
+    "Thể thao",
+    "Giả tưởng",
+    "Mecha",
+    "Khoa học viễn tưởng",
+    "Tâm lý / Kịch tính",
+    "Trinh thám / Bí ẩn",
   ];
 
   useEffect(async () => {

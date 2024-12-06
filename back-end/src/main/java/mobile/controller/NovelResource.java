@@ -644,7 +644,7 @@ public class NovelResource {
             if (comic.getUploader().getUsername().equals(user.getUsername())) {
                 String tenchap = updateChapterRequest.getTenchap();
                 chapter.setTenchap(tenchap);
-                chapter.setContent(updateChapterRequest.getContent());
+//                chapter.setContent(updateChapterRequest.getContent());
                 chapterService.SaveChapter(chapter);
             } else {
                 throw new BadCredentialsException("Không thể chỉnh sửa truyện của người khác");

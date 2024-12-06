@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import apiMain from '../../api/apiMain';
 import { loginSuccess } from '../../redux/authSlice';
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,9 +11,20 @@ import Loading from '../../components/Loading';
 import LoadingData from '../../components/LoadingData';
 import getData from '../../api/getData';
 
-function CreateNovel({userInfo}) {
-    const types = ["Tiên hiệp", "Dã sử", "Kì ảo", "Kiếm hiệp", "Huyền huyễn", "Khoa huyễn"]
-    const user = useSelector(state=>state.auth.login.user)
+function CreateNovel({ userInfo }) {
+    const types = [
+        "Hành động",
+        "Phiêu lưu",
+        "Hài hước",
+        "Siêu nhiên",
+        "Thể thao",
+        "Giả tưởng",
+        "Mecha",
+        "Khoa học viễn tưởng",
+        "Tâm lý / Kịch tính",
+        "Trinh thám / Bí ẩn"
+    ];
+    const user = useSelector(state => state.auth.login.user)
     const [image, setImage] = useState("");
     const [preview, setPreview] = useState(avt)
     const [name, setName] = useState("");
@@ -24,26 +35,26 @@ function CreateNovel({userInfo}) {
     const [loadingUser, setLoadingUser] = useState(true)
     const dispatch = useDispatch()
 
-    
+
     useEffect(() => {
-        const loadUser = async() => {
+        const loadUser = async () => {
             if (userInfo) {
-              setLoadingUser(false)
+                setLoadingUser(false)
             }
         }
         loadUser();
-      }, [userInfo])
+    }, [userInfo])
 
 
     const handleCreateNovel = async (data) => {//xử lý gọi tạo truyện mới
         try {
-            apiMain.createComic(data,user, dispatch, loginSuccess )
-                .then(res =>{
+            apiMain.createComic(data, user, dispatch, loginSuccess)
+                .then(res => {
                     toast.success("Đăng truyện thành công")
                     dispatch(setLoading(false))
                 })
-                .catch(err=>{
-                    
+                .catch(err => {
+
                     dispatch(setLoading(false))
                     toast.error(getData(err.response)?.details.message)
                 })
@@ -58,7 +69,7 @@ function CreateNovel({userInfo}) {
         if (image == null)
             return;
         dispatch(setLoading(true))
-        const url = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(' ').filter(i=>i!=='').join('-').toLowerCase()
+        const url = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(' ').filter(i => i !== '').join('-').toLowerCase()
         const storageRef = ref(storage, `/images/truyen/${url}`);
         uploadBytes(storageRef, image).then((result) => {//upload ảnh
             getDownloadURL(result.ref).then(async (urlImage) => {//lấy liên kết tới ảnh
@@ -69,7 +80,7 @@ function CreateNovel({userInfo}) {
                     description,
                     genre,
                     url,
-                    uploader:userInfo?._id
+                    uploader: userInfo?._id
                 }
                 await handleCreateNovel(data)//gọi API
             })
