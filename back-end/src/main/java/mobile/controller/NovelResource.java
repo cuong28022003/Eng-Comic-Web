@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("api/novels")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000") // Cho phép React truy cập
 public class NovelResource {
     private static final Logger LOGGER = LogManager.getLogger(NovelResource.class);
 
@@ -359,7 +360,57 @@ public class NovelResource {
 
     }
 
-    @PostMapping("novel/create") // Tạo đầu truyện
+    @GetMapping("/reading") // API lấy thông tin đọc của người dùng theo URL
+    @ResponseBody
+    public ResponseEntity<ReadingResponse> getReadingByUrl(
+            @RequestParam("url") String url,
+            HttpServletRequest request) {
+        // Lấy thông tin Access Token từ Header
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String accessToken = authorizationHeader.substring("Bearer ".length());
+
+            // Kiểm tra xem token có hết hạn không
+            if (jwtUtils.validateExpiredToken(accessToken)) {
+                throw new BadCredentialsException("Access token đã hết hạn");
+            }
+
+            // Lấy thông tin người dùng từ token
+            String username = jwtUtils.getUserNameFromJwtToken(accessToken);
+            User user = userService.findByUsername(username);
+            if (user == null) {
+                throw new RecordNotFoundException("Không tìm thấy người dùng");
+            }
+
+            Comic comic = comicService.findByUrl(url);
+            if (comic == null) {
+                throw new RecordNotFoundException("Không tìm thấy truyện");
+            }
+
+            // Tìm hoặc tạo mới Reading
+            Reading reading = readingService.getReading(user, comic).orElseGet(() -> {
+                Reading newReading = new Reading();
+                newReading.setUser(user);
+                newReading.setNovel(comic);
+                newReading.setChapnumber(1); // Giá trị mặc định
+                readingService.save(newReading);
+                return newReading;
+            });
+            // Tính số chương của truyện
+            int sochap = chapterService.countByDauTruyen(reading.getNovel().getId());
+
+            // Chuyển đổi entity sang response DTO
+            ReadingResponse readingResponse = ReadingMapping.EntityToResponese(reading, sochap);
+
+            // Trả về kết quả
+            return new ResponseEntity<>(readingResponse, HttpStatus.OK);
+        } else {
+            throw new BadCredentialsException("Không tìm thấy Access Token");
+        }
+    }
+
+
+    @PostMapping("novel/create") //Tạo đầu truyện
     @ResponseBody
     public ResponseEntity<SuccessResponse> createNovel(@RequestBody CreateNovelRequest createNovelRequest,
             HttpServletRequest request) {
@@ -652,15 +703,13 @@ public class NovelResource {
         }
     }
 
-    // API lấy truyện theo thể loại
-    @GetMapping("/genre/{genre}")
-    public List<Comic> getComicsByGenre(@PathVariable String genre) {
-        return comicService.getComicsByGenre(genre);
-    }
-
-    // API lấy truyện theo tác giả
-    @GetMapping("/artist/{artist}")
-    public List<Comic> getComicsByArtist(@PathVariable String artist) {
-        return comicService.getComicsByArtist(artist);
+    @PatchMapping("/increment-views/{url}")
+    public ResponseEntity<Comic> incrementViews(@PathVariable String url) {
+        try {
+            Comic updatedComic = comicService.incrementViews(url);
+            return ResponseEntity.ok(updatedComic);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 }

@@ -113,4 +113,10 @@ public class ComicServiceImpl implements ComicService {
         return comicRepository.findByNameContainingIgnoreCaseAndGenreContainingIgnoreCase(name, genre, pageable);
     }
 
+    @Override
+    public Comic incrementViews(String url) {
+        Comic comic = comicRepository.findByUrl(url);
+        comic.setViews(comic.getViews() + 1);
+        return comicRepository.save(comic);
+    }
 }

@@ -3,10 +3,13 @@ package mobile.model.Entity;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 
-@Entity
+@RestResource(exported=false)
+@Document(collection = "ratings")
 public class Rating {
     @Id
     protected ObjectId _id;

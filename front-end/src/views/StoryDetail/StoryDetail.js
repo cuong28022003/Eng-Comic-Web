@@ -176,6 +176,12 @@ function StoryDetail() {
     } catch (error) {
       console.log("Error: " + error);
     }
+
+    try {
+      await apiMain.incrementViews(url);
+    } catch (error) {
+      console.error("Error incrementing views:", error);
+    }
   };
 
   //style
@@ -201,7 +207,7 @@ function StoryDetail() {
                   >
                     {comic?.artist}
                   </li>
-                  <li className={liClass}>{comic?.status}</li>
+                  {/* <li className={liClass}>{comic?.status}</li> */}
                   <li
                     className={liClass}
                     onClick={() => onClickGenre(comic?.genre)}

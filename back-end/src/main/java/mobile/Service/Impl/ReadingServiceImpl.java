@@ -47,4 +47,9 @@ public class ReadingServiceImpl implements ReadingService{
 	public Optional<Reading> getReading(User user, Comic comic) {
 		return readingRepository.findWithParam(user.getId(), comic.getId());
 	}
+
+	@Override
+	public Reading save(Reading reading) {
+		return readingRepository.save(reading);
+	}
 }
